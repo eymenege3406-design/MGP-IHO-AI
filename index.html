@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MGP İHO AI - Muzafferda Güzide Pulur İHO</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background: #090d16; color: #f8fafc; height: 100vh; display: flex; overflow: hidden; }
+
+        /* Sol Sidebar (Gemini & Claude Tarzı) */
+        .sidebar {
+            width: 280px;
+            background: #0f172a;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 15px;
+            color: #818cf8;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .school-name { font-size: 11px; color: #94a3b8; display: block; font-weight: normal; margin-top: 2px; }
+
+        .btn-new-chat {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-new-chat:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .section-title { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 1px; margin-top: 10px; }
+
+        .mode-list { display: flex; flex-direction: column; gap: 6px; }
+
+        .mode-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .mode-item:hover, .mode-item.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: #6366f1;
+            color: #818cf8;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Ana Sohbet Alanı */
+        .main-chat { flex: 1; display: flex; flex-direction: column; background: radial-gradient(circle at top right, #1e1b4b, #090d16); }
+
+        header {
+            padding: 16px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        #chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+
+        .message {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 15px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .user-message { align-self: flex-end; background: linear-gradient(135deg, #4f46e5, #2563eb); color: #fff; border-bottom-right-radius: 2px; }
+        .ai-message { align-self: flex-start; background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255, 255, 255, 0.08); color: #f1f5f9; border-bottom-left-radius: 2px; }
+
+        .ai-img { max-width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+        .tts-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; }
+        .tts-btn:hover { color: #818cf8; }
+
+        /* Input Alanı */
+        .input-area { padding: 16px 20px; background: rgba(15, 23, 42, 0.9); border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px; }
+        .file-preview { font-size: 12px; color: #818cf8; display: none; align-items: center; gap: 6px; }
+
+        .input-box-wrapper { display: flex; gap: 10px; align-items: center; }
+
+        #user-input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #0f172a;
+            color: #fff;
+            outline: none;
+            font-size: 15px;
+        }
+
+        #user-input:focus { border-color: #6366f1; }
+
+        .icon-btn {
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover { background: rgba(255, 255, 255, 0.15); }
+        .mic-active { background: #ef4444 !important; animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .send-btn { padding: 14px 22px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        /* Modal */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 999; }
+        .modal-card { background: #1e293b; padding: 30px; border-radius: 16px; width: 340px; display: flex; flex-direction: column; gap: 15px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .modal-card input { padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; outline: none; }
+        .modal-card button { padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <!-- Giriş Modalı -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-card">
+            <h2 id="modal-title" style="color: #818cf8; text-align: center;">MGP İHO Giriş</h2>
+            <input type="text" id="auth-username" placeholder="Kullanıcı Adı">
+            <input type="password" id="auth-password" placeholder="Şifre">
+            <button onclick="handleAuth()" id="modal-btn">Giriş Yap</button>
+            <div style="font-size: 12px; text-align: center; color: #94a3b8; cursor: pointer;" onclick="toggleAuthMode()" id="auth-toggle-btn">Hesabın yok mu? Kayıt Ol</div>
+        </div>
+    </div>
+
+    <!-- Sol Sidebar -->
+    <div class="sidebar">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="brand-header">
+                <span>⚡ MGP İHO AI</span>
+                <span style="background: #4f46e5; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px;">ULTRA</span>
+            </div>
+            <span class="school-name">Muzafferda Güzide Pulur İHO</span>
+
+            <button class="btn-new-chat" onclick="clearChat()">➕ Yeni Sohbet</button>
+
+            <span class="section-title">Ders Modları</span>
+            <div class="mode-list">
+                <div class="mode-item active" onclick="setMode('genel', this)">🤖 Genel Asistan</div>
+                <div class="mode-item" onclick="setMode('matematik', this)">🧮 Matematik Profesörü</div>
+                <div class="mode-item" onclick="setMode('ingilizce', this)">🇬🇧 İngilizce Öğretmeni</div>
+                <div class="mode-item" onclick="setMode('din', this)">🕌 Din Kültürü & Ahlak</div>
+                <div class="mode-item" onclick="setMode('gamer', this)">🎮 Gamer / Oyun Modu</div>
+            </div>
+
+            <span class="section-title">Araçlar</span>
+            <div class="mode-list">
+                <div class="mode-item" onclick="downloadChat()">📄 Sohbeti İndir (.txt)</div>
+            </div>
+        </div>
+
+        <div class="user-card">
+            <div>
+                <p id="user-display-name" style="font-weight: bold; font-size: 13px;">Misafir</p>
+                <p style="font-size: 10px; color: #10b981;">● Çevrimiçi</p>
+            </div>
+            <button onclick="logout()" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:12px;">Çıkış</button>
+        </div>
+    </div>
+
+    <!-- Ana Sohbet -->
+    <div class="main-chat">
+        <header>
+            <div>
+                <h3 id="current-mode-title" style="color:#f8fafc; font-size: 16px;">MGP İHO Akıllı Ders Asistanı</h3>
+                <p style="font-size: 11px; color:#94a3b8;">Muzafferda Güzide Pulur İmam Hatip Ortaokulu Özel Yapay Zekası</p>
+            </div>
+        </header>
+
+        <div id="chat-box">
+            <div class="message ai-message">
+                Selam! Ben <b>MGP İHO AI</b>. Muzafferda Güzide Pulur İmam Hatip Ortaokulu öğrencileri için özel olarak geliştirildim. 
+                <br><br>
+                💡 <b>Neler yapabilirim?</b>
+                <br>• Zor sorularını adım adım çözebilirim.
+                <br>• Resim çizdirmek için <code>/çiz uzayda okul</code> yazabilirsin.
+                <br>• Mikrofona basıp benimle sesli konuşabilirsin!
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div id="file-preview" class="file-preview">
+                📎 <span id="file-name">dosya.txt</span> <span style="color:#ef4444; cursor:pointer;" onclick="removeFile()">✕</span>
+            </div>
+            <div class="input-box-wrapper">
+                <label class="icon-btn" title="Dosya Yükle">
+                    📎
+                    <input type="file" id="file-input" style="display:none;" onchange="handleFileSelect(event)">
+                </label>
+                <button class="icon-btn" id="mic-btn" title="Sesle Yaz" onclick="toggleSpeech()">🎙️</button>
+                <input type="text" id="user-input" placeholder="MGP İHO AI'ya sorun veya /çiz araba yazın..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="send-btn" onclick="sendMessage()">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isRegisterMode = false;
+        let currentUser = null;
+        let attachedFileContent = "";
+        let currentMode = 'genel';
+        let chatHistory = [];
+        let recognition = null;
+        let isListening = false;
+
+        const modePrompts = {
+            genel: 'Sen Muzafferda Güzide Pulur İmam Hatip Ortaokulu (MGP İHO) özel yapay zeka asistanısın. Samimi, son derece zeki ve ders dostusun.',
+            matematik: 'Sen MGP İHO Matematik Profesörüsün. Ortaokul ve LGS matematik sorularını adım adım, formüllerle mantığını açıklayarak çözersin.',
+            ingilizce: 'Sen MGP İHO İngilizce Öğretmenisin. Kelimeleri açıklar, cümle çevirileri yapar ve İngilizce konuşma pratikleri yaptırırsın.',
+            din: 'Sen MGP İHO Din Kültürü ve Ahlak Bilgisi öğretmenisin. Sureler, dualar, Peygamberler tarihi ve güzel ahlak konularında rehbersin.',
+            gamer: 'Sen eğlenceli bir Gamer yapay zekasın. Minecraft, PUBG, Roblox ve Among Us gibi oyunlarda en iyi taktikleri ve rehberliği sunarsın.'
+        };
+
+        window.onload = function() {
+            const savedUser = localStorage.getItem('mgp_active_user');
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById('auth-modal').style.display = 'none';
+                document.getElementById('user-display-name').innerText = currentUser;
+            }
+            initSpeech();
+            resetHistory();
+        };
+
+        function resetHistory() {
+            chatHistory = [{ role: 'system', content: modePrompts[currentMode] }];
+        }
+
+        function setMode(mode, element) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('current-mode-title').innerText = element.innerText;
+            resetHistory();
+            appendMessage(`<b>${element.innerText}</b> moduna geçildi! Nasıl yardımcı olabilirim?`, 'ai-message');
+        }
+
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('modal-title').innerText = isRegisterMode ? "MGP İHO Kayıt Ol" : "MGP İHO Giriş";
+            document.getElementById('modal-btn').innerText = isRegisterMode ? "Kayıt Ol" : "Giriş Yap";
+            document.getElementById('auth-toggle-btn').innerText = isRegisterMode ? "Zaten hesabın var mı? Giriş Yap" : "Hesabın yok mu? Kayıt Ol";
+        }
+
+        function handleAuth() {
+            const user = document.getElementById('auth-username').value.trim();
+            const pass = document.getElementById('auth-password').value.trim();
+            if (!user || !pass) { alert("Lütfen kullanıcı adı ve şifre girin!"); return; }
+
+            let users = JSON.parse(localStorage.getItem('mgp_users') || '{}');
+
+            if (isRegisterMode) {
+                if (users[user]) { alert("Bu kullanıcı adı dolu!"); return; }
+                users[user] = pass;
+                localStorage.setItem('mgp_users', JSON.stringify(users));
+                alert("Kayıt başarılı! Giriş yapabilirsiniz.");
+                toggleAuthMode();
+            } else {
+                if (users[user] && users[user] === pass) {
+                    currentUser = user;
+                    localStorage.setItem('mgp_active_user', user);
+                    document.getElementById('auth-modal').style.display = 'none';
+                    document.getElementById('user-display-name').innerText = currentUser;
+                } else {
+                    alert("Kullanıcı adı veya şifre yanlış!");
+                }
+            }
+        }
+
+        function logout() { localStorage.removeItem('mgp_active_user'); location.reload(); }
+
+        // Ses Tanıma (STT)
+        function initSpeech() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'tr-TR';
+                recognition.onresult = function(event) {
+                    document.getElementById('user-input').value = event.results[0][0].transcript;
+                    toggleSpeech();
+                };
+                recognition.onerror = function() { toggleSpeech(); };
+            }
+        }
+
+        function toggleSpeech() {
+            if (!recognition) { alert("Tarayıcınız sesle yazmayı desteklemiyor."); return; }
+            const micBtn = document.getElementById('mic-btn');
+            if (isListening) {
+                recognition.stop();
+                isListening = false;
+                micBtn.classList.remove('mic-active');
+            } else {
+                recognition.start();
+                isListening = true;
+                micBtn.classList.add('mic-active');
+            }
+        }
+
+        // Sesli Okuma (TTS)
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const cleanText = text.replace(/<[^>]*>?/gm, '');
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'tr-TR';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Dosya İşlemleri
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            document.getElementById('file-name').innerText = file.name;
+            document.getElementById('file-preview').style.display = 'flex';
+            const reader = new FileReader();
+            reader.onload = function(evt) { attachedFileContent = `\n\n[DOSYA İÇERİĞİ (${file.name})]:\n` + evt.target.result; };
+            reader.readAsText(file);
+        }
+
+        function removeFile() {
+            attachedFileContent = "";
+            document.getElementById('file-input').value = "";
+            document.getElementById('file-preview').style.display = 'none';
+        }
+
+        // Mesaj Gönderimi & Otomatik Yeniden Deneme (Sunucu Yoğunluğu Düzeltmesi)
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            let message = inputField.value.trim();
+
+            if (!message && !attachedFileContent) return;
+
+            // Resim Çizme Komutu Kontrolü (/çiz)
+            if (message.toLowerCase().startsWith('/çiz ') || message.toLowerCase().startsWith('çiz:')) {
+                const prompt = message.replace(/\/çiz |çiz:/i, '');
+                appendMessage(message, 'user-message');
+                inputField.value = '';
+                generateImage(prompt);
+                return;
+            }
+
+            if (attachedFileContent) { message += attachedFileContent; removeFile(); }
+
+            appendMessage(inputField.value, 'user-message');
+            inputField.value = '';
+
+            chatHistory.push({ role: 'user', content: message });
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message ai-message';
+            loadingDiv.innerText = 'MGP İHO AI yanıt hazırlıyor...';
+            document.getElementById('chat-box').appendChild(loadingDiv);
+
+            let aiReply = null;
+            let attempts = 0;
+
+            // Arka Planda 3 Defa Tekrar Deneme Mekanizması
+            while (attempts < 3 && (!aiReply || aiReply.trim() === '{}' || aiReply.trim() === '')) {
+                try {
+                    attempts++;
+                    const response = await fetch('https://text.pollinations.ai/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messages: chatHistory, model: 'openai' })
+                    });
+                    aiReply = await response.text();
+                } catch (err) {
+                    console.log("Tekrar deneniyor...");
+                }
+            }
+
+            document.getElementById('chat-box').removeChild(loadingDiv);
+
+            if (aiReply && aiReply.trim() !== '{}' && aiReply.trim() !== '') {
+                appendMessage(aiReply, 'ai-message', true);
+                chatHistory.push({ role: 'assistant', content: aiReply });
+            } else {
+                appendMessage("Sunucu şu an aşırı yoğun. Lütfen birkaç saniye sonra tekrar gönder!", 'ai-message');
+            }
+        }
+
+        // Yapay Zeka Resim Çizme
+        function generateImage(prompt) {
+            const chatBox = document.getElementById('chat-box');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message ai-message';
+            loadingDiv.innerText = `🎨 "${prompt}" resmi çiziliyor...`;
+            chatBox.appendChild(loadingDiv);
+
+            const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=600&nologo=true`;
+            const img = new Image();
+            img.src = imgUrl;
+            img.className = 'ai-img';
+            img.onload = function() {
+                chatBox.removeChild(loadingDiv);
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message ai-message';
+                msgDiv.innerHTML = `🎨 <b>İşte çizdiğim resim:</b><br>`;
+                msgDiv.appendChild(img);
+                chatBox.appendChild(msgDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            };
+        }
+
+        function appendMessage(text, className, addTts = false) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+
+            if (addTts) {
+                const ttsBtn = document.createElement('button');
+                ttsBtn.className = 'tts-btn';
+                ttsBtn.innerHTML = '🔊';
+                ttsBtn.title = 'Sesli Oku';
+                ttsBtn.onclick = () => speakText(text);
+                messageDiv.appendChild(ttsBtn);
+            }
+
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function clearChat() {
+            document.getElementById('chat-box').innerHTML = '';
+            resetHistory();
+            appendMessage("Yeni sohbet başlatıldı! Nasıl yardımcı olabilirim?", 'ai-message');
+        }
+
+        function downloadChat() {
+            let chatText = "=== MGP İHO AI SOHBET NOTLARI ===\n\n";
+            document.querySelectorAll('.message').forEach(m => {
+                chatText += m.innerText.replace('🔊', '') + "\n---------------------\n";
+            });
+            const blob = new Blob([chatText], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'MGP_IHO_AI_Notlar.txt';
+            a.click();
+        }
+    </script>
+</body>
+</html>
