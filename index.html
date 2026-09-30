@@ -23,7 +23,7 @@
 
         /* Sol Sidebar (Gemini Style) */
         .sidebar {
-            width: 280px;
+            width: 290px;
             background: var(--bg-side);
             display: flex;
             flex-direction: column;
@@ -41,21 +41,18 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .logo-box {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #a8c7fa, #d0bcff);
+        .gemini-logo-svg {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #a8c7fa, #d0bcff, #f2b8b5);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            color: #131314;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(168, 199, 250, 0.3);
+            box-shadow: 0 4px 12px rgba(168, 199, 250, 0.25);
         }
 
-        .brand-info h2 { font-size: 14px; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+        .brand-info h2 { font-size: 13.5px; font-weight: 700; color: var(--text-main); line-height: 1.2; }
         .brand-info p { font-size: 10px; color: var(--accent-blue); font-weight: 700; margin-top: 3px; }
 
         .dev-badge {
@@ -66,7 +63,7 @@
             padding: 4px 8px;
             border-radius: 20px;
             text-align: center;
-            margin-top: 8px;
+            margin-top: 10px;
             letter-spacing: 0.5px;
         }
 
@@ -74,10 +71,10 @@
             background: var(--bg-card);
             color: var(--text-main);
             border: 1px solid rgba(255,255,255,0.1);
-            padding: 12px 16px;
+            padding: 11px 16px;
             border-radius: 28px;
             font-weight: 600;
-            font-size: 13.5px;
+            font-size: 13px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -92,10 +89,10 @@
         .menu-list { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding-right: 4px; }
 
         .menu-item {
-            padding: 10px 14px;
-            border-radius: 20px;
+            padding: 10px 12px;
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12.5px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -111,18 +108,32 @@
             border-radius: 16px;
             border: 1px solid rgba(255,255,255,0.08);
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            gap: 10px;
         }
 
-        .profile-name { font-size: 13px; font-weight: 700; color: #fff; }
-        .profile-sub { font-size: 11px; color: var(--accent-blue); }
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a8c7fa, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #131314;
+            font-size: 14px;
+        }
+
+        .profile-info { flex: 1; }
+        .profile-name { font-size: 12.5px; font-weight: 700; color: #fff; }
+        .profile-sub { font-size: 10.5px; color: var(--accent-blue); }
 
         /* Ana Chat Alanı */
         .main-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); position: relative; }
 
         header {
-            padding: 16px 28px;
+            padding: 14px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -168,8 +179,8 @@
             gap: 16px;
         }
 
-        .welcome-title { font-size: 32px; font-weight: 700; background: linear-gradient(90deg, #a8c7fa, #d0bcff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .welcome-sub { font-size: 14px; color: var(--text-sub); }
+        .welcome-title { font-size: 30px; font-weight: 700; background: linear-gradient(90deg, #a8c7fa, #d0bcff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-sub { font-size: 13.5px; color: var(--text-sub); }
 
         .prompt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
         .prompt-card {
@@ -207,7 +218,7 @@
             max-width: 80%;
             padding: 14px 18px;
             border-radius: 18px;
-            font-size: 14.5px;
+            font-size: 14px;
             line-height: 1.6;
             word-wrap: break-word;
         }
@@ -217,7 +228,7 @@
 
         .generated-img { width: 100%; max-width: 500px; border-radius: 14px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* Bottom Floating Input Bar (Gemini Style) */
+        /* Bottom Floating Input Bar */
         .input-container { padding: 10px 15% 24px 15%; background: transparent; }
 
         .floating-input-box {
@@ -239,7 +250,7 @@
             border: none;
             outline: none;
             color: var(--text-main);
-            font-size: 15px;
+            font-size: 14.5px;
         }
 
         .icon-btn {
@@ -272,17 +283,17 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 24px;
             padding: 24px;
-            width: 440px;
-            max-width: 90%;
+            width: 480px;
+            max-width: 92%;
             max-height: 85vh;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .modal-body h3 { font-size: 18px; color: var(--accent-blue); }
-        .modal-body label { font-size: 12px; color: var(--text-sub); font-weight: 600; margin-bottom: -6px; }
+        .modal-body h3 { font-size: 17px; color: var(--accent-blue); }
+        .modal-body label { font-size: 12px; color: var(--text-sub); font-weight: 600; margin-bottom: -4px; }
         .modal-body input, .modal-body select, .modal-body textarea {
             background: var(--bg-main);
             border: 1px solid rgba(255,255,255,0.1);
@@ -290,7 +301,7 @@
             padding: 10px 12px;
             color: #fff;
             outline: none;
-            font-size: 13.5px;
+            font-size: 13px;
             width: 100%;
         }
 
@@ -298,7 +309,7 @@
             background: linear-gradient(135deg, #a8c7fa, #6366f1);
             color: #131314;
             border: none;
-            padding: 12px;
+            padding: 11px;
             border-radius: 12px;
             font-weight: bold;
             cursor: pointer;
@@ -313,7 +324,7 @@
             padding: 12px;
             border-radius: 10px;
             color: var(--accent-green);
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 600;
             text-align: center;
         }
@@ -325,10 +336,10 @@
     <div class="sidebar">
         <div>
             <div class="brand-header">
-                <div class="logo-box">MGP</div>
+                <div class="gemini-logo-svg">✦</div>
                 <div class="brand-info">
-                    <h2>MGP İHO AI</h2>
-                    <p>Gemini 2.5 Engine</p>
+                    <h2>Muzafferda Güzide Pulur İHO</h2>
+                    <p>Gemini 2.5 Live Engine</p>
                 </div>
             </div>
             <div class="dev-badge">⚡ BY EYMEN EGE ÜNAL</div>
@@ -337,20 +348,23 @@
                 <span>➕</span> Yeni Sohbet
             </button>
 
-            <div class="menu-group-title">MEB Sınav & Not Araçları</div>
+            <div class="menu-group-title">Okul & Sınav Araçları</div>
             <div class="menu-list">
+                <div class="menu-item" onclick="openModal('modal-eokul')">📲 e-Okul Canlı Not Entegrasyonu</div>
+                <div class="menu-item" onclick="openModal('modal-schedule')">📅 5 Günlük Tam Ders Programı</div>
                 <div class="menu-item" onclick="openModal('modal-tr')">📝 Türkçe (Yazılı+Dinleme+Konuşma)</div>
-                <div class="menu-item" onclick="openModal('modal-iokbs')">🏆 İOKBS Bursluluk Hesaplama</div>
-                <div class="menu-item" onclick="openModal('modal-eokul')">📲 e-Okul Not Analizcisi</div>
+                <div class="menu-item" onclick="openModal('modal-iokbs')">🏆 İOKBS Bursluluk Puanı</div>
                 <div class="menu-item" onclick="openModal('modal-banana')">🖼️ Nano Banana 2 Görsel Stüdyosu</div>
-                <div class="menu-item" onclick="openModal('modal-schedule')">📅 Haftalık Ders & Sınav Takibi</div>
             </div>
         </div>
 
         <div class="student-profile-card">
-            <div class="profile-name" id="disp-student-name">Ahmet Koyuncu</div>
-            <div class="profile-sub" id="disp-student-class">7/H Sınıfı Öğrencisi</div>
-            <button class="btn-action btn-secondary" onclick="openModal('modal-profile')" style="margin-top: 6px; padding: 6px; font-size: 11px;">⚙️ Profil & Ses Ayarları</button>
+            <div class="profile-avatar" id="disp-avatar">AK</div>
+            <div class="profile-info">
+                <div class="profile-name" id="disp-student-name">Ahmet Koyuncu</div>
+                <div class="profile-sub" id="disp-student-class">7/H Sınıfı Öğrencisi</div>
+            </div>
+            <button class="icon-btn" onclick="openModal('modal-profile')" title="Profil Ayarları">⚙️</button>
         </div>
     </div>
 
@@ -359,7 +373,7 @@
         <header>
             <div class="header-title-wrapper">
                 <span class="gemini-sparkle">✦</span>
-                <span style="font-weight: 700; font-size: 15px;">Muzafferda Güzide Pulur İHO Özel Yapay Zekası</span>
+                <span style="font-weight: 700; font-size: 14.5px;">MGP İHO AI - Yapay Zeka Asistanı</span>
             </div>
             <div class="live-tag">
                 <div class="live-dot"></div> CANLI SOHBET
@@ -369,21 +383,21 @@
         <div id="chat-box">
             <!-- Varsayılan Hoşgeldin Ekranı -->
             <div class="welcome-box" id="welcome-screen">
-                <div class="welcome-title">Selam, Ahmet! Bugün ne öğrenmek istersin?</div>
-                <div class="welcome-sub">MGP İHO özel yapay zekası; derslerin, sınavların ve MEB not hesaplamaların için hazır.</div>
+                <div class="welcome-title">Selam! Bugün derslerde ne yapıyoruz?</div>
+                <div class="welcome-sub">Muzafferda Güzide Pulur İHO Özel Yapay Zekası ders programın, sınavların ve e-Okul notların için hazır.</div>
                 
                 <div class="prompt-grid">
-                    <div class="prompt-card" onclick="quickPrompt('Pazartesi günü Hasan Hoca ile Matematik dersim var. Neler öğreneceğiz?')">
-                        <b>📐 Pazartesi Matematik Dersi</b><br>Hasan Hoca ile işlenecek konular ve çalışma tavsiyeleri.
+                    <div class="prompt-card" onclick="quickPrompt('Bugün ders programımda ne var? Hangi öğretmenlerle dersim var?')">
+                        <b>📅 Günlük Ders Takvimi</b><br>Günün dersleri ve öğretmen ders programını incele.
                     </div>
-                    <div class="prompt-card" onclick="quickPrompt('Cuma günü yapılacak olan Genel Deneme Sınavı için nasıl bir tekrar yapmalıyım?')">
-                        <b>🎯 Cuma Günü Deneme Sınavı</b><br>Deneme sınavında yüksek net yapmak için özel taktikler.
+                    <div class="prompt-card" onclick="openModal('modal-eokul')">
+                        <b>📲 e-Okul Not Entegrasyonu</b><br>e-Okul notlarını aktar, ortalamanı ve zayıf dersleri analiz et.
+                    </div>
+                    <div class="prompt-card" onclick="quickPrompt('/çiz Otlayan sevimli bir inek resmi')">
+                        <b>🖼️ Nano Banana 2 Görsel Üret</b><br>Güvenli ve yüksek kalitede ders/resim çizdir.
                     </div>
                     <div class="prompt-card" onclick="openModal('modal-tr')">
                         <b>🎙️ Türkçe 3'lü Sınav Notu</b><br>Yazılı, Dinleme ve Konuşma sınavı ortalamasını hesapla.
-                    </div>
-                    <div class="prompt-card" onclick="quickPrompt('/çiz Okul bahçesinde teknolojik yapay zeka sınıfı')">
-                        <b>🖼️ Nano Banana 2 Görsel Üret</b><br>Yapay zeka ile okul ve ders temalı resim çizdir.
                     </div>
                 </div>
             </div>
@@ -391,8 +405,8 @@
 
         <div class="input-container">
             <div class="floating-input-box">
-                <button class="icon-btn" title="Nano Banana 2 Görsel Üret" onclick="openModal('modal-banana')">🎨</button>
-                <input type="text" id="user-input" placeholder="MGP İHO AI'ya sorun veya /çiz komutu kullanın..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="icon-btn" title="Görsel Çizdir" onclick="openModal('modal-banana')">🎨</button>
+                <input type="text" id="user-input" placeholder="MGP İHO AI'ya sorun veya /çiz komutu yazın..." onkeypress="if(event.key==='Enter') sendMessage()">
                 <button class="icon-btn" id="mic-btn" title="Sesli Konuş" onclick="toggleSpeech()">🎙</button>
                 <button class="icon-btn" style="color: var(--accent-blue);" onclick="sendMessage()">➔</button>
             </div>
@@ -401,11 +415,50 @@
 
     <!-- MODALLAR -->
 
-    <!-- 1. Türkçe 3'lü Sınav Hesaplama Modalı -->
+    <!-- 1. e-Okul Not Entegrasyon Modalı -->
+    <div id="modal-eokul" class="modal-overlay" style="display: none;">
+        <div class="modal-body">
+            <h3>📲 e-Okul Canlı Not Entegrasyonu & Analizci</h3>
+            <p style="font-size:11px; color:var(--text-sub);">e-Okul'daki not tablonuzu veya notlarınızı kopyalayıp aşağıdaki alana yapıştırın. Yapay zeka tüm derslerin ortalamasını çıkarıp zayıf derslerinize çalışma programı hazırlar.</p>
+
+            <label>e-Okul Not Tablosu / Metni:</label>
+            <textarea id="eokul-text" rows="5" placeholder="Örn: Türkçe: 1.Yazılı 85, 2.Yazılı 90, Sözlü 100&#10;Matematik: 1.Yazılı 60, 2.Yazılı 70&#10;Devamsızlık: 2.5 Gün"></textarea>
+
+            <button class="btn-action" onclick="analyzeEOkul()">e-Okul Verilerini Aktar ve Analiz Et</button>
+            <button class="btn-action btn-secondary" onclick="closeModal('modal-eokul')">Kapat</button>
+        </div>
+    </div>
+
+    <!-- 2. Full 5 Günlük Ders Programı Modalı -->
+    <div id="modal-schedule" class="modal-overlay" style="display: none;">
+        <div class="modal-body">
+            <h3>📅 5 Günlük Haftalık Ders & Sınav Takibi</h3>
+
+            <label>Pazartesi:</label>
+            <input type="text" id="sch-mon" value="Matematik (Hasan Hoca), Türkçe, Din Kültürü">
+
+            <label>Salı:</label>
+            <input type="text" id="sch-tue" value="Fen Bilimleri, İngilizce, Sosyal Bilgiler">
+
+            <label>Çarşamba:</label>
+            <input type="text" id="sch-wed" value="Matematik (Hasan Hoca), Bilişim Teknolojileri">
+
+            <label>Perşembe:</label>
+            <input type="text" id="sch-thu" value="Türkçe, Fen Bilimleri, Görsel Sanatlar">
+
+            <label>Cuma (Etkinlik & Deneme):</label>
+            <input type="text" id="sch-fri" value="LGS / Genel Deneme Sınavı, Müzik, Beden Eğitimi">
+
+            <button class="btn-action" onclick="saveSchedule()">Haftalık Programı Kaydet</button>
+            <button class="btn-action btn-secondary" onclick="closeModal('modal-schedule')">Kapat</button>
+        </div>
+    </div>
+
+    <!-- 3. Türkçe 3'lü Sınav Hesaplama Modalı -->
     <div id="modal-tr" class="modal-overlay" style="display: none;">
         <div class="modal-body">
             <h3>📝 Türkçe & Diller 3'lü Not Hesaplayıcı</h3>
-            <p style="font-size:11px; color:var(--text-sub);">MEB Yönetmeliği: Yazılı (%50) + Dinleme (%25) + Konuşma (%25)</p>
+            <p style="font-size:11px; color:var(--text-sub);">MEB Yeni Yönetmeliği: Yazılı (%50) + Dinleme (%25) + Konuşma (%25)</p>
 
             <label>1. Yazılı Sınav Notu (%50):</label>
             <input type="number" id="tr-written" placeholder="Örn: 85" min="0" max="100">
@@ -422,73 +475,43 @@
         </div>
     </div>
 
-    <!-- 2. İOKBS Bursluluk Modalı -->
+    <!-- 4. İOKBS Bursluluk Modalı -->
     <div id="modal-iokbs" class="modal-overlay" style="display: none;">
         <div class="modal-body">
             <h3>🏆 İOKBS Bursluluk Sınavı Hesaplayıcı</h3>
-            <p style="font-size:11px; color:var(--text-sub);">3 Yanlış 1 Doğruyu Götürür (25'er Soru)</p>
 
-            <label>Türkçe Netiniz:</label>
+            <label>Türkçe Netiniz (25 Soru):</label>
             <input type="number" id="iokbs-tr" placeholder="Örn: 22.33">
 
-            <label>Matematik Netiniz:</label>
+            <label>Matematik Netiniz (25 Soru):</label>
             <input type="number" id="iokbs-mat" placeholder="Örn: 20.00">
 
-            <label>Fen Bilimleri Netiniz:</label>
+            <label>Fen Bilimleri Netiniz (25 Soru):</label>
             <input type="number" id="iokbs-fen" placeholder="Örn: 23.00">
 
-            <label>Sosyal Bilgiler Netiniz:</label>
+            <label>Sosyal Bilgiler Netiniz (25 Soru):</label>
             <input type="number" id="iokbs-sos" placeholder="Örn: 21.66">
 
-            <button class="btn-action" onclick="calcIOKBS()">Puanı Tahmin Et</button>
+            <button class="btn-action" onclick="calcIOKBS()">Puan Hesapla</button>
             <div id="iokbs-result" class="result-box" style="display:none;"></div>
             <button class="btn-action btn-secondary" onclick="closeModal('modal-iokbs')">Kapat</button>
         </div>
     </div>
 
-    <!-- 3. e-Okul Not Analizcisi -->
-    <div id="modal-eokul" class="modal-overlay" style="display: none;">
-        <div class="modal-body">
-            <h3>📲 e-Okul Akıllı Veri Aktarıcı</h3>
-            <p style="font-size:11px; color:var(--text-sub);">e-Okul'daki ders notlarınızı kopyalayıp buraya yapıştırın. Yapay zeka karnenizi analiz edip ders taktiği versin!</p>
-
-            <textarea id="eokul-text" rows="5" placeholder="Örn: Matematik: 65, Türkçe: 90, Fen: 70..."></textarea>
-            
-            <button class="btn-action" onclick="analyzeEOkul()">Yapay Zeka Karnemi Analiz Et</button>
-            <button class="btn-action btn-secondary" onclick="closeModal('modal-eokul')">Kapat</button>
-        </div>
-    </div>
-
-    <!-- 4. Nano Banana 2 Görsel Stüdyosu -->
+    <!-- 5. Nano Banana 2 Görsel Stüdyosu -->
     <div id="modal-banana" class="modal-overlay" style="display: none;">
         <div class="modal-body">
-            <h3>🖼️ Nano Banana 2 AI Stüdyosu</h3>
-            <p style="font-size:11px; color:var(--text-sub);">Çizdirmek istediğiniz resmi detaylıca yazın.</p>
+            <h3>🖼️ Nano Banana 2 Güvenli Görsel Stüdyosu</h3>
+            <p style="font-size:11px; color:var(--text-sub);">İstediğiniz resmi yazın (Çeviri ve okul güvenlik filtresi otomatiktir).</p>
 
-            <input type="text" id="banana-prompt" placeholder="Örn: Uzayda geçen bir ortaokul fen laboratuvarı, siberpunk stili">
+            <input type="text" id="banana-prompt" placeholder="Örn: Otlayan sevimli bir inek çizimi">
 
             <button class="btn-action" onclick="generateBananaImg()">Görseli Üret</button>
             <button class="btn-action btn-secondary" onclick="closeModal('modal-banana')">Kapat</button>
         </div>
     </div>
 
-    <!-- 5. Haftalık Ders & Sınav Takip Modalı -->
-    <div id="modal-schedule" class="modal-overlay" style="display: none;">
-        <div class="modal-body">
-            <h3>📅 Haftalık Ders Programı & Sınav Takibi</h3>
-
-            <label>Pazartesi Dersleri & Öğretmenler:</label>
-            <input type="text" id="sch-mon" value="Matematik (Hasan Hoca), Türkçe">
-
-            <label>Cuma Günü Etkinlik / Sınav:</label>
-            <input type="text" id="sch-fri" value="LGS / Genel Deneme Sınavı">
-
-            <button class="btn-action" onclick="saveSchedule()">Programı Kaydet</button>
-            <button class="btn-action btn-secondary" onclick="closeModal('modal-schedule')">Kapat</button>
-        </div>
-    </div>
-
-    <!-- 6. Öğrenci Profil & Ses Ayarları -->
+    <!-- 6. Öğrenci Profil Ayarları -->
     <div id="modal-profile" class="modal-overlay" style="display: none;">
         <div class="modal-body">
             <h3>⚙️ Öğrenci Profili & Ses Ayarları</h3>
@@ -499,10 +522,10 @@
             <label>Sınıf / Şube:</label>
             <input type="text" id="prof-class" value="7/H">
 
-            <label>Yapay Zeka Ses Tonu (Tiz / Kalın):</label>
-            <input type="range" id="voice-pitch" min="0.5" max="2" step="0.1" value="1.0">
+            <label>Yapay Zeka Ses Tonu (Pitch):</label>
+            <input type="range" id="voice-pitch" min="0.5" max="1.8" step="0.1" value="1.0">
 
-            <button class="btn-action" onclick="saveProfile()">Kaydet</button>
+            <button class="btn-action" onclick="saveProfile()">Profil Kaydet</button>
             <button class="btn-action btn-secondary" onclick="closeModal('modal-profile')">Kapat</button>
         </div>
     </div>
@@ -511,8 +534,12 @@
         // State Variables
         let studentName = localStorage.getItem('mgp_sname') || "Ahmet Koyuncu";
         let studentClass = localStorage.getItem('mgp_sclass') || "7/H";
-        let scheduleMon = localStorage.getItem('mgp_sch_mon') || "Matematik (Hasan Hoca), Türkçe";
-        let scheduleFri = localStorage.getItem('mgp_sch_fri') || "Genel Deneme Sınavı";
+        let schMon = localStorage.getItem('mgp_sch_mon') || "Matematik (Hasan Hoca), Türkçe, Din Kültürü";
+        let schTue = localStorage.getItem('mgp_sch_tue') || "Fen Bilimleri, İngilizce, Sosyal Bilgiler";
+        let schWed = localStorage.getItem('mgp_sch_wed') || "Matematik (Hasan Hoca), Bilişim Teknolojileri";
+        let schThu = localStorage.getItem('mgp_sch_thu') || "Türkçe, Fen Bilimleri, Görsel Sanatlar";
+        let schFri = localStorage.getItem('mgp_sch_fri') || "LGS / Genel Deneme Sınavı, Müzik, Beden Eğitimi";
+        let eokulData = localStorage.getItem('mgp_eokul') || "Not bilgisi henüz aktarılmadı.";
 
         let chatHistory = [];
         let recognition = null;
@@ -529,20 +556,27 @@
             document.getElementById('disp-student-class').innerText = studentClass + " Sınıfı Öğrencisi";
             document.getElementById('prof-name').value = studentName;
             document.getElementById('prof-class').value = studentClass;
+
+            const initials = studentName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('disp-avatar').innerText = initials || "ÖÇ";
         }
 
         function resetSystemPrompt() {
-            const systemPrompt = `Sen Muzafferda Güzide Pulur İmam Hatip Ortaokulu (MGP İHO) için Google Gemini mimarisiyle özel olarak geliştirilmiş, 'BY EYMEN EGE ÜNAL' imzalı süper zeki ve profesör seviyesinde bir eğitim yapay zekasısın.
+            const systemPrompt = `Sen Muzafferda Güzide Pulur İmam Hatip Ortaokulu (MGP İHO) için özel geliştirilmiş, 'BY EYMEN EGE ÜNAL' imzalı profesör seviyesinde bir eğitim yapay zekasısın.
 Öğrenci Bilgileri:
 - Ad Soyad: ${studentName}
 - Sınıf/Şube: ${studentClass}
-- Pazartesi Programı: ${scheduleMon}
-- Cuma Günü: ${scheduleFri}
+- Pazartesi Programı: ${schMon}
+- Salı Programı: ${schTue}
+- Çarşamba Programı: ${schWed}
+- Perşembe Programı: ${schThu}
+- Cuma Programı: ${schFri}
+- e-Okul Güncel Not Verileri: ${eokulData}
 
 Görevin:
-1. Öğrenciye Matematik, Türkçe, Fen, Din Kültürü, İOKBS ve Deneme sınavlarında süper zeki, eğitici ve profesör kalitesinde rehberlik etmek.
-2. Öğrenci soru sorduğunda ders programındaki bilgileri (Örn: Pazartesi Hasan Hoca ile Matematik dersini veya Cuma günkü Deneme sınavını) hatırlayıp buna göre özel yanıt vermek.
-3. Yanıtların her zaman anlaşılır, adımlı, motive edici ve Türkçe dil kurallarına mükemmel uygun olmalıdır.`;
+1. Öğrenciye haftanın her günü derslerinde, ödevlerinde ve deneme sınavlarında profesör zekasıyla rehberlik etmek.
+2. Sorulan soruya göre öğrencinin o günkü dersini veya e-Okul notlarındaki zayıf derslerini hatırlatıp kişiselleştirilmiş rehberlik sunmak.
+3. Yanıtların kibar, anlaşılır, motive edici ve düzgün Türkçe kurallarına uygun olmalıdır.`;
 
             chatHistory = [{ role: 'system', content: systemPrompt }];
         }
@@ -553,6 +587,17 @@ Görevin:
         function quickPrompt(text) {
             document.getElementById('user-input').value = text;
             sendMessage();
+        }
+
+        // e-Okul Analiz
+        function analyzeEOkul() {
+            const data = document.getElementById('eokul-text').value;
+            if(!data) return;
+            eokulData = data;
+            localStorage.setItem('mgp_eokul', eokulData);
+            closeModal('modal-eokul');
+            resetSystemPrompt();
+            quickPrompt(`İşte aktardığım e-Okul verilerim:\n"${data}"\nLütfen ders notlarımı analiz et, ortalamamı tahmin et ve düşük notlarımı yükseltmem için bana ders ders tavsiye ver.`);
         }
 
         // Türkçe 3'lü Puanlama
@@ -567,7 +612,7 @@ Görevin:
             resDiv.innerHTML = `MEB Türkçe Ortalamanız: <b>${avg.toFixed(2)}</b> / 100`;
         }
 
-        // İOKBS Bursluluk Hesaplama
+        // İOKBS Bursluluk
         function calcIOKBS() {
             const tr = parseFloat(document.getElementById('iokbs-tr').value) || 0;
             const mat = parseFloat(document.getElementById('iokbs-mat').value) || 0;
@@ -575,18 +620,11 @@ Görevin:
             const sos = parseFloat(document.getElementById('iokbs-sos').value) || 0;
 
             const totalNet = tr + mat + fen + sos;
-            const estimatedScore = 300 + (totalNet * 1.95);
+            const score = 300 + (totalNet * 1.95);
             
             const resDiv = document.getElementById('iokbs-result');
             resDiv.style.display = 'block';
-            resDiv.innerHTML = `Toplam Net: <b>${totalNet.toFixed(2)}</b><br>Tahmini Bursluluk Puanı: <b>${estimatedScore.toFixed(2)}</b>`;
-        }
-
-        function analyzeEOkul() {
-            const data = document.getElementById('eokul-text').value;
-            if(!data) return;
-            closeModal('modal-eokul');
-            quickPrompt(`İşte e-Okul notlarım: "${data}". Lütfen eksik olduğum dersleri analiz et ve bana özel bir çalışma takvimi çıkar.`);
+            resDiv.innerHTML = `Toplam Net: <b>${totalNet.toFixed(2)}</b><br>Tahmini Bursluluk Puanı: <b>${score.toFixed(2)}</b>`;
         }
 
         function generateBananaImg() {
@@ -597,13 +635,21 @@ Görevin:
         }
 
         function saveSchedule() {
-            scheduleMon = document.getElementById('sch-mon').value;
-            scheduleFri = document.getElementById('sch-fri').value;
-            localStorage.setItem('mgp_sch_mon', scheduleMon);
-            localStorage.setItem('mgp_sch_fri', scheduleFri);
+            schMon = document.getElementById('sch-mon').value;
+            schTue = document.getElementById('sch-tue').value;
+            schWed = document.getElementById('sch-wed').value;
+            schThu = document.getElementById('sch-thu').value;
+            schFri = document.getElementById('sch-fri').value;
+
+            localStorage.setItem('mgp_sch_mon', schMon);
+            localStorage.setItem('mgp_sch_tue', schTue);
+            localStorage.setItem('mgp_sch_wed', schWed);
+            localStorage.setItem('mgp_sch_thu', schThu);
+            localStorage.setItem('mgp_sch_fri', schFri);
+
             closeModal('modal-schedule');
             resetSystemPrompt();
-            alert("Ders ve sınav takvimi güncellendi!");
+            alert("5 Günlük Haftalık Ders Programı Kaydedildi!");
         }
 
         function saveProfile() {
@@ -614,10 +660,10 @@ Görevin:
             updateProfileUI();
             closeModal('modal-profile');
             resetSystemPrompt();
-            alert("Profil ayarları kaydedildi!");
+            alert("Öğrenci profili güncellendi!");
         }
 
-        // Chat ve Yapay Zeka Mesajlaşma
+        // Sohbet Mantığı
         async function sendMessage() {
             const inputField = document.getElementById('user-input');
             const text = inputField.value.trim();
@@ -672,11 +718,16 @@ Görevin:
             const chatBox = document.getElementById('chat-box');
             const aiRow = document.createElement('div');
             aiRow.className = 'message-row';
+
+            // Güvenlik ve Doğruluk Filtresi
+            const safePrompt = encodeURIComponent(prompt + ", cute cartoon illustration, clean, safe for work, high quality, school friendly");
+            const imgUrl = `https://image.pollinations.ai/prompt/${safePrompt}?width=800&height=600&nologo=true`;
+
             aiRow.innerHTML = `
                 <div class="msg-avatar ai-avatar">🎨</div>
                 <div class="message-content ai-msg">
                     <b>Nano Banana 2 Visual AI:</b> "${prompt}" görseli oluşturuldu:<br>
-                    <img class="generated-img" src="https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=600&nologo=true" alt="Görsel">
+                    <img class="generated-img" src="${imgUrl}" alt="${prompt}">
                 </div>
             `;
             chatBox.appendChild(aiRow);
@@ -701,7 +752,7 @@ Görevin:
             resetSystemPrompt();
         }
 
-        // Seslendirme & Konuşma Tanıma
+        // Seslendirme & Konuşma
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
