@@ -3,415 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muzafferda Güzide Pulur İmam Hatip Ortaokulu - Okul Portalı</title>
+    <title>Öğrenci Yönetim ve Akademik AI Portalı</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icon Set -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .brand-red { color: #d32f2f; }
-        .bg-brand-red { background-color: #d32f2f; }
-        .border-brand-red { border-color: #d32f2f; }
-    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen p-4 md:p-8">
 
-    <!-- HEADER / NAV -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-            <!-- LOGO & OKUL ADI -->
-            <div class="flex items-center space-x-3">
-                <div class="border-2 border-red-600 rounded-lg p-1 px-3 bg-red-50 flex flex-col items-center justify-center">
-                    <span class="text-3xl font-black tracking-tighter text-red-600 italic">MGP</span>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold text-gray-900 leading-tight">MUZAFFERDA GÜZİDE PULUR</h1>
-                    <p class="text-xs font-semibold text-red-600 tracking-wider">İMAM HATİP ORTAOKULU</p>
-                </div>
-            </div>
+    <div class="max-w-4xl mx-auto space-y-8">
+        
+        <!-- BAŞLIK -->
+        <header class="text-center py-4 border-b border-slate-300">
+            <h1 class="text-3xl font-bold text-slate-900">Öğrenci ve Akademik AI Yönetim Portalı</h1>
+            <p class="text-slate-600 text-sm mt-1">Giriş, Kayıt ve Yapay Zeka Tabanlı Performans Analiz Paneli</p>
+        </header>
 
-            <!-- GEZİNTİ VE SESLİ OKUMA -->
-            <div class="flex items-center space-x-2 flex-wrap">
-                <button onclick="readPageText()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-2 rounded-lg font-semibold flex items-center transition">
-                    <i class="fa-solid fa-volume-high mr-1.5"></i> Sesli Dinle
-                </button>
-                <button onclick="openAdminModal()" class="bg-gray-800 hover:bg-gray-900 text-white text-xs px-3 py-2 rounded-lg font-semibold flex items-center transition">
-                    <i class="fa-solid fa-user-gear mr-1.5"></i> Admin Girişi
-                </button>
-            </div>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- MODÜL 1: ÖĞRENCİ OTURUM AÇMA (GİRİŞ) -->
+            <section class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-blue-600 border-b pb-2">1. Öğrenci Oturum Aç</h2>
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Öğrenci Numarası</label>
+                        <input type="text" id="loginStudentNum" required class="mt-1 w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Örn: 2026001">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Şifre</label>
+                        <input type="password" id="loginPassword" required class="mt-1 w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition">Giriş Yap</button>
+                </form>
+                <div id="loginStatus" class="mt-3 text-sm font-medium hidden"></div>
+            </section>
 
-        <!-- SEKMELER / MENÜ -->
-        <nav class="bg-red-700 text-white text-sm font-medium">
-            <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-6 py-2">
-                <button onclick="showTab('schedule')" class="tab-btn hover:text-amber-200 py-1 border-b-2 border-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-calendar-days"></i> Ders Programı
-                </button>
-                <button onclick="showTab('homework')" class="tab-btn hover:text-amber-200 py-1 border-b-2 border-transparent flex items-center gap-1.5">
-                    <i class="fa-solid fa-book-open"></i> Ödev Alanı
-                </button>
-                <button onclick="showTab('blog')" class="tab-btn hover:text-amber-200 py-1 border-b-2 border-transparent flex items-center gap-1.5">
-                    <i class="fa-solid fa-newspaper"></i> Okul Blogu
-                </button>
-                <button onclick="showTab('chat')" class="tab-btn hover:text-amber-200 py-1 border-b-2 border-transparent flex items-center gap-1.5">
-                    <i class="fa-solid fa-comments"></i> Sınıf Sohbeti
-                </button>
-            </div>
-        </nav>
-    </header>
-
-    <!-- ANA İÇERİK ALANI -->
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
-
-        <!-- 1. SINIFA ÖZEL DERS PROGRAMI -->
-        <section id="tab-schedule" class="tab-content space-y-4">
-            <div class="bg-white p-5 rounded-xl shadow-sm border flex flex-col md:flex-row justify-between items-md-center gap-4">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-800"><i class="fa-solid fa-calendar-week text-red-600 mr-2"></i>Sınıfa Özel Haftalık Ders Programı</h2>
-                    <p class="text-sm text-gray-500">Lütfen ders programını görüntülemek istediğiniz sınıfı seçin.</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <label class="text-sm font-semibold text-gray-700">Sınıf Seçin:</label>
-                    <select id="classSelect" onchange="updateSchedule()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 outline-none">
-                        <option value="5A">5-A Sınıfı</option>
-                        <option value="5B">5-B Sınıfı</option>
-                        <option value="6A">6-A Sınıfı</option>
-                        <option value="7A">7-A Sınıfı</option>
-                        <option value="8A">8-A Sınıfı</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- PROGRAM TABLOSU -->
-            <div class="bg-white rounded-xl shadow-sm border overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-700">
-                    <thead class="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                        <tr>
-                            <th class="px-4 py-3">Saat / Gün</th>
-                            <th class="px-4 py-3">Pazartesi</th>
-                            <th class="px-4 py-3">Salı</th>
-                            <th class="px-4 py-3">Çarşamba</th>
-                            <th class="px-4 py-3">Perşembe</th>
-                            <th class="px-4 py-3">Cuma</th>
-                        </tr>
-                    </thead>
-                    <tbody id="scheduleBody" class="divide-y">
-                        <!-- JS Tarafından Dinamik Doldurulur -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- 2. ÖDEV ALANI & DOSYA YÜKLEME -->
-        <section id="tab-homework" class="tab-content hidden space-y-6">
-            <div class="bg-white p-5 rounded-xl shadow-sm border">
-                <h2 class="text-xl font-bold text-gray-800 mb-1"><i class="fa-solid fa-file-pen text-red-600 mr-2"></i>Ödev ve Dosya Teslim Alanı</h2>
-                <p class="text-sm text-gray-500 mb-4">Aktif ödevlerinizi kontrol edebilir ve hazırladığınız dosyaları doğrudan yükleyebilirsiniz.</p>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Aktif Ödevler -->
-                    <div class="space-y-3">
-                        <h3 class="font-bold text-gray-700 border-b pb-2">Aktif Ödev Listesi</h3>
-                        <div class="border rounded-lg p-3 bg-red-50/50 flex justify-between items-center">
-                            <div>
-                                <span class="bg-red-600 text-white text-xs px-2 py-0.5 rounded font-bold">Matematik</span>
-                                <h4 class="font-semibold text-gray-800 text-sm mt-1">Kesirlerde Toplama Alıştırmaları</h4>
-                                <p class="text-xs text-gray-500">Son Teslim: Cuma, 17:00</p>
-                            </div>
-                            <span class="text-xs text-amber-600 font-bold bg-amber-100 px-2 py-1 rounded">Devam Ediyor</span>
+            <!-- MODÜL 2: ÖĞRENCİ EKLE (KAYIT) -->
+            <section class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-emerald-600 border-b pb-2">2. Yeni Öğrenci Ekle</h2>
+                <form id="addStudentForm" class="space-y-3">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700">Ad</label>
+                            <input type="text" id="addFirstName" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                         </div>
-                        <div class="border rounded-lg p-3 bg-blue-50/50 flex justify-between items-center">
-                            <div>
-                                <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded font-bold">Arapça</span>
-                                <h4 class="font-semibold text-gray-800 text-sm mt-1">Sözlük Ezber Çalışması (Sayfa 24)</h4>
-                                <p class="text-xs text-gray-500">Son Teslim: Pazartesi</p>
-                            </div>
-                            <span class="text-xs text-amber-600 font-bold bg-amber-100 px-2 py-1 rounded">Devam Ediyor</span>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700">Soyad</label>
+                            <input type="text" id="addLastName" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                         </div>
                     </div>
-
-                    <!-- Dosya Yükleme Kutusu -->
-                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center text-center bg-gray-50 hover:bg-gray-100 transition">
-                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-red-600 mb-2"></i>
-                        <p class="text-sm font-semibold text-gray-700">Ödev Dosyanızı Buraya Sürükleyin veya Seçin</p>
-                        <p class="text-xs text-gray-400 mb-4">PDF, Word, Görsel veya Ses Dosyaları (Maks 25MB)</p>
-                        <input type="file" id="homeworkFileInput" class="hidden" onchange="handleFileUpload(event)">
-                        <button onclick="document.getElementById('homeworkFileInput').click()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-2 rounded-lg font-bold transition">
-                            <i class="fa-solid fa-folder-open mr-1"></i> Dosya Seç
-                        </button>
-                        <p id="uploadStatus" class="text-xs text-green-600 font-semibold mt-3 hidden"></p>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700">Öğrenci Numarası</label>
+                        <input type="text" id="addStudentNum" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. OKUL BLOGU (Öğrenci, Öğretmen, İdare) -->
-        <section id="tab-blog" class="tab-content hidden space-y-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-800"><i class="fa-solid fa-blog text-red-600 mr-2"></i>MGP Okul Blogu</h2>
-                    <p class="text-sm text-gray-500">Öğrenci, öğretmen ve idareden paylaşımlar ve yazılar.</p>
-                </div>
-            </div>
-
-            <!-- Kategori Filtreleri -->
-            <div class="flex space-x-2 border-b pb-2">
-                <button onclick="filterBlog('all')" class="blog-filter text-xs px-3 py-1.5 rounded-full bg-red-600 text-white font-semibold">Tümü</button>
-                <button onclick="filterBlog('idare')" class="blog-filter text-xs px-3 py-1.5 rounded-full bg-gray-200 text-gray-700 font-semibold">İdare</button>
-                <button onclick="filterBlog('ogretmen')" class="blog-filter text-xs px-3 py-1.5 rounded-full bg-gray-200 text-gray-700 font-semibold">Öğretmenler</button>
-                <button onclick="filterBlog('ogrenci')" class="blog-filter text-xs px-3 py-1.5 rounded-full bg-gray-200 text-gray-700 font-semibold">Öğrenciler</button>
-            </div>
-
-            <!-- Blog Gönderileri -->
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- İdare Paylaşımı -->
-                <div class="blog-card idare bg-white rounded-xl shadow-sm border p-4 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="bg-gray-800 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase">İdare</span>
-                        <span class="text-xs text-gray-400">1 Ekim 2026</span>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700">E-Posta</label>
+                        <input type="email" id="addEmail" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-base">Deneyap ve Teknofest Çalışmaları Başladı</h3>
-                    <p class="text-xs text-gray-600 leading-relaxed">Okulumuz bünyesinde Teknoloji yarışmalarına katılacak öğrencilerimiz için atölye kayıtlarımız açılmıştır.</p>
-                    <div class="text-xs font-semibold text-red-600">Yazar: Okul Müdürü</div>
-                </div>
-
-                <!-- Öğretmen Paylaşımı -->
-                <div class="blog-card ogretmen bg-white rounded-xl shadow-sm border p-4 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase">Öğretmen</span>
-                        <span class="text-xs text-gray-400">28 Eylül 2026</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700">Sınıf / Seviye</label>
+                            <input type="number" id="addGrade" min="1" max="12" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" value="5">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700">Şifre</label>
+                            <input type="password" id="addPassword" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-800 text-base">Verimli Ders Çalışma Teknikleri</h3>
-                    <p class="text-xs text-gray-600 leading-relaxed">Günlük planlı çalışma ve düzenli mola vermenin LGS hazırlık sürecindeki önemine dair püf noktalar.</p>
-                    <div class="text-xs font-semibold text-red-600">Yazar: Rehberlik Servisi</div>
-                </div>
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold hover:bg-emerald-700 transition mt-2">Öğrenci Kaydet</button>
+                </form>
+                <div id="addStudentStatus" class="mt-3 text-sm font-medium hidden"></div>
+            </section>
 
-                <!-- Öğrenci Paylaşımı -->
-                <div class="blog-card ogrenci bg-white rounded-xl shadow-sm border p-4 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="bg-green-600 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase">Öğrenci</span>
-                        <span class="text-xs text-gray-400">25 Eylül 2026</span>
-                    </div>
-                    <h3 class="font-bold text-gray-800 text-base">Satranç Turnuvasında Birincilik!</h3>
-                    <p class="text-xs text-gray-600 leading-relaxed">Okulumuzu temsil ettiğimiz ilçe satranç turnuvasında madalya kazanan takımımızın deneyimleri.</p>
-                    <div class="text-xs font-semibold text-red-600">Yazar: Ahmet K. (7-A)</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. SINIF SOHBET ALANI -->
-        <section id="tab-chat" class="tab-content hidden">
-            <div class="bg-white rounded-xl shadow-sm border flex flex-col h-[500px]">
-                <!-- Sohbet Başlığı -->
-                <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-users text-red-600"></i>
-                        <h2 class="font-bold text-gray-800 text-sm">5-A Sınıf Sohbet Odası</h2>
-                    </div>
-                    <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">12 Öğrenci Çevrimiçi</span>
-                </div>
-
-                <!-- Mesaj Geçmişi -->
-                <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs">
-                    <div class="bg-gray-100 p-2.5 rounded-lg max-w-xs">
-                        <span class="font-bold text-gray-700">Ali (Öğrenci):</span> Yarınki Din Kültürü ödevi sayfa kaçtaydı arkadaşlar?
-                    </div>
-                    <div class="bg-red-50 border border-red-100 p-2.5 rounded-lg max-w-xs ml-auto text-right">
-                        <span class="font-bold text-red-700">Zeynep (Siz):</span> Sayfa 42 ve 43'teki sorular yazılacak.
-                    </div>
-                </div>
-
-                <!-- Mesaj Gönderme Kutusu -->
-                <div class="p-3 border-t flex gap-2">
-                    <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." class="flex-grow border rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-red-500 outline-none">
-                    <button onclick="sendChatMessage()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs font-bold">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. ÖZEL ADMİN YÖNETİM PANELİ (Giriş Yapılınca Görünür) -->
-        <section id="tab-admin-panel" class="tab-content hidden space-y-6">
-            <div class="bg-gray-900 text-white p-6 rounded-xl flex justify-between items-center">
-                <div>
-                    <span class="text-xs bg-red-600 text-white px-2 py-1 rounded font-bold uppercase tracking-wider">İdare Özel</span>
-                    <h2 class="text-2xl font-bold mt-1">Okul Yönetici Kontrol Paneli</h2>
-                    <p class="text-xs text-gray-400">Muzafferda Güzide Pulur İ.H.O. sistem ayarları ve içerik yönetimi.</p>
-                </div>
-                <button onclick="logoutAdmin()" class="bg-red-600 hover:bg-red-700 text-xs px-3 py-2 rounded font-bold">Çıkış Yap</button>
-            </div>
-
-            <!-- Admin Hızlı İşlem Kartları -->
-            <div class="grid md:grid-cols-4 gap-4">
-                <div class="bg-white border p-4 rounded-xl text-center space-y-2">
-                    <i class="fa-solid fa-bullhorn text-2xl text-red-600"></i>
-                    <h3 class="font-bold text-sm text-gray-800">Duyuru Yayınla</h3>
-                    <button class="bg-gray-100 text-xs font-bold px-3 py-1.5 rounded hover:bg-gray-200">Ekle</button>
-                </div>
-                <div class="bg-white border p-4 rounded-xl text-center space-y-2">
-                    <i class="fa-solid fa-calendar-plus text-2xl text-blue-600"></i>
-                    <h3 class="font-bold text-sm text-gray-800">Ders Programı Düzenle</h3>
-                    <button class="bg-gray-100 text-xs font-bold px-3 py-1.5 rounded hover:bg-gray-200">Güncelle</button>
-                </div>
-                <div class="bg-white border p-4 rounded-xl text-center space-y-2">
-                    <i class="fa-solid fa-user-shield text-2xl text-green-600"></i>
-                    <h3 class="font-bold text-sm text-gray-800">Kullanıcı İzinleri</h3>
-                    <button class="bg-gray-100 text-xs font-bold px-3 py-1.5 rounded hover:bg-gray-200">Yönet</button>
-                </div>
-                <div class="bg-white border p-4 rounded-xl text-center space-y-2">
-                    <i class="fa-solid fa-file-export text-2xl text-purple-600"></i>
-                    <h3 class="font-bold text-sm text-gray-800">Sistem Raporları</h3>
-                    <button class="bg-gray-100 text-xs font-bold px-3 py-1.5 rounded hover:bg-gray-200">İndir</button>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ADMIN GİRİŞ MODALI -->
-    <div id="adminModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl max-w-sm w-full p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-gray-800"><i class="fa-solid fa-lock text-red-600 mr-2"></i>Okul Yöneticisi Girişi</h3>
-                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs font-semibold text-gray-600">Kullanıcı Adı / T.C.</label>
-                    <input type="text" id="adminUser" class="w-full border rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-red-500">
-                </div>
-                <div>
-                    <label class="text-xs font-semibold text-gray-600">Yönetici Şifresi</label>
-                    <input type="password" id="adminPass" class="w-full border rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-red-500">
-                </div>
-            </div>
-            <button onclick="loginAdmin()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg text-xs font-bold transition">Giriş Yap</button>
         </div>
+
+        <!-- MODÜL 3: YAPAY ZEKA AKADEMİK ANALİZİ (Sohbet/Blog Hariç) -->
+        <section class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+            <h2 class="text-xl font-bold mb-2 text-purple-600 border-b pb-2">3. Akademik AI Performans Analiz Modülü</h2>
+            <p class="text-xs text-slate-500 mb-4">* Sohbet veya blog içeriği içermez; doğrudan sınav notları ve eksik konular üzerinden analiz üretir.</p>
+
+            <form id="aiAnalysisForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Ders Adı</label>
+                        <input type="text" id="aiSubject" required placeholder="Örn: Matematik" class="mt-1 w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Sınav Notları (Virgülle ayırın)</label>
+                        <input type="text" id="aiScores" required placeholder="Örn: 70, 85, 60" class="mt-1 w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700">Hatalı Yapılan / Zorlanılan Konular (Virgülle ayırın)</label>
+                    <input type="text" id="aiTopics" required placeholder="Örn: Üslü Sayılar, Kesirler" class="mt-1 w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                </div>
+                <button type="submit" class="w-full bg-purple-600 text-white py-2.5 rounded-lg font-semibold hover:bg-purple-700 transition">Yapay Zeka Analizini Başlat</button>
+            </form>
+
+            <!-- AI SONUÇ EKRANI -->
+            <div id="aiResultContainer" class="mt-6 p-4 rounded-lg bg-purple-50 border border-purple-200 hidden">
+                <h3 class="font-bold text-purple-900 text-lg mb-2">AI Akademik Analiz Raporu</h3>
+                <p class="text-sm text-slate-700 mb-1"><strong>Genel Durum:</strong> <span id="aiOverall" class="font-semibold text-purple-700"></span></p>
+                <div class="mt-3">
+                    <p class="text-sm font-semibold text-slate-800">Önerilen Çalışma Planı:</p>
+                    <ul id="aiPlanList" class="list-disc list-inside text-sm text-slate-600 mt-1 space-y-1"></ul>
+                </div>
+            </div>
+        </section>
+
     </div>
 
-    <!-- JAVASCRIPT KOŞUTLARI -->
+    <!-- JAVASCRIPT / API ENTEGRASYONU -->
     <script>
-        // 1. ÖRNEK DERS PROGRAMI VERİLERİ (SINIFLARA ÖZEL)
-        const schedules = {
-            "5A": [
-                { time: "08:30 - 09:10", mon: "Türkçe", tue: "Matematik", wed: "Arapça", thu: "Fen Bil.", fri: "Din Kültürü" },
-                { time: "09:25 - 10:05", mon: "Türkçe", tue: "Matematik", wed: "Arapça", thu: "Fen Bil.", fri: "Din Kültürü" },
-                { time: "10:20 - 11:00", mon: "Matematik", tue: "İngilizce", wed: "Sosyal Bil.", thu: "Kur'an-ı Kerim", fri: "Spor" }
-            ],
-            "5B": [
-                { time: "08:30 - 09:10", mon: "Arapça", tue: "Türkçe", wed: "Matematik", thu: "Din Kültürü", fri: "Fen Bil." },
-                { time: "09:25 - 10:05", mon: "Arapça", tue: "Türkçe", wed: "Matematik", thu: "Din Kültürü", fri: "Fen Bil." },
-                { time: "10:20 - 11:00", mon: "İngilizce", tue: "Sosyal Bil.", wed: "Kur'an-ı Kerim", thu: "Matematik", fri: "Görsel S." }
-            ],
-            "8A": [
-                { time: "08:30 - 09:10", mon: "LGS Mat", tue: "LGS Fen", wed: "Türkçe", thu: "İnkılap Tarihi", fri: "İngilizce" },
-                { time: "09:25 - 10:05", mon: "LGS Mat", tue: "LGS Fen", wed: "Türkçe", thu: "İnkılap Tarihi", fri: "İngilizce" },
-                { time: "10:20 - 11:00", mon: "Din Kültürü", tue: "Kur'an-ı Kerim", wed: "LGS Mat", thu: "Arapça", fri: "Rehberlik" }
-            ]
-        };
+        const API_BASE = "http://127.0.0.1:8000/api";
+        let authToken = "";
 
-        function updateSchedule() {
-            const selectedClass = document.getElementById('classSelect').value;
-            const tbody = document.getElementById('scheduleBody');
-            tbody.innerHTML = '';
+        // 1. OTURUM AÇMA
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const statusDiv = document.getElementById("loginStatus");
+            const formData = new URLSearchParams();
+            formData.append("username", document.getElementById("loginStudentNum").value);
+            formData.append("password", document.getElementById("loginPassword").value);
 
-            const list = schedules[selectedClass] || schedules["5A"];
-            list.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="px-4 py-3 font-semibold bg-gray-50">${row.time}</td>
-                    <td class="px-4 py-3">${row.mon}</td>
-                    <td class="px-4 py-3">${row.tue}</td>
-                    <td class="px-4 py-3">${row.wed}</td>
-                    <td class="px-4 py-3">${row.thu}</td>
-                    <td class="px-4 py-3">${row.fri}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // 2. SEKMELER ARASI GEÇİŞ
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('border-white'));
-            
-            const target = document.getElementById('tab-' + tabName);
-            if(target) target.classList.remove('hidden');
-        }
-
-        // 3. SESLİ DİNLEME (Text-To-Speech)
-        function readPageText() {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const text = "Muzafferda Güzide Pulur İmam Hatip Ortaokulu web portalına hoş geldiniz. Ders programı, ödevler, okul blogu ve sohbet modülleri aktiftir.";
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'tr-TR';
-                window.speechSynthesis.speak(utterance);
-            } else {
-                alert("Tarayıcınız sesli okuma özelliğini desteklemiyor.");
-            }
-        }
-
-        // 4. DOSYA YÜKLEME SİMÜLASYONU
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const status = document.getElementById('uploadStatus');
-                status.textContent = `"${file.name}" başarıyla yüklendi! Öğretmen onayına gönderildi.`;
-                status.classList.remove('hidden');
-            }
-        }
-
-        // 5. CANLI SOHBET SİMÜLASYONU
-        function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (message) {
-                const chatContainer = document.getElementById('chatMessages');
-                const msgDiv = document.createElement('div');
-                msgDiv.className = "bg-red-50 border border-red-100 p-2.5 rounded-lg max-w-xs ml-auto text-right";
-                msgDiv.innerHTML = `<span class="font-bold text-red-700">Siz:</span> ${message}`;
-                chatContainer.appendChild(msgDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-                input.value = '';
-            }
-        }
-
-        // 6. ADMİN MODAL & GİRİŞ İŞLEMLERİ
-        function openAdminModal() {
-            document.getElementById('adminModal').classList.remove('hidden');
-            document.getElementById('adminModal').classList.add('flex');
-        }
-        function closeAdminModal() {
-            document.getElementById('adminModal').classList.add('hidden');
-            document.getElementById('adminModal').classList.remove('flex');
-        }
-        function loginAdmin() {
-            // Basit Admin Girişi Simülasyonu
-            closeAdminModal();
-            showTab('admin-panel');
-            alert("Yönetici girişi başarılı. Admin paneline yönlendirildiniz.");
-        }
-        function logoutAdmin() {
-            showTab('schedule');
-            alert("Yönetici oturumu kapatıldı.");
-        }
-
-        // 7. BLOG FİLTRELEME
-        function filterBlog(category) {
-            const cards = document.querySelectorAll('.blog-card');
-            cards.forEach(card => {
-                if(category === 'all' || card.classList.contains(category)) {
-                    card.style.display = 'block';
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    authToken = data.access_token;
+                    statusDiv.className = "mt-3 text-sm font-medium text-emerald-600 block";
+                    statusDiv.innerText = "Giriş Başarılı! Token alındı.";
                 } else {
-                    card.style.display = 'none';
+                    throw new Error(data.detail || "Giriş başarısız.");
                 }
-            });
-        }
+            } catch (err) {
+                statusDiv.className = "mt-3 text-sm font-medium text-red-600 block";
+                statusDiv.innerText = err.message;
+            }
+        });
 
-        // Başlangıçta 5-A Ders Programını Yükle
-        updateSchedule();
+        // 2. ÖĞRENCİ EKLEME
+        document.getElementById("addStudentForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const statusDiv = document.getElementById("addStudentStatus");
+            const payload = {
+                first_name: document.getElementById("addFirstName").value,
+                last_name: document.getElementById("addLastName").value,
+                student_number: document.getElementById("addStudentNum").value,
+                email: document.getElementById("addEmail").value,
+                grade_level: parseInt(document.getElementById("addGrade").value),
+                password: document.getElementById("addPassword").value
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/students/add`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    statusDiv.className = "mt-3 text-sm font-medium text-emerald-600 block";
+                    statusDiv.innerText = `Öğrenci kaydedildi: ${data.first_name} ${data.last_name}`;
+                    document.getElementById("addStudentForm").reset();
+                } else {
+                    throw new Error(data.detail || "Kayıt başarısız.");
+                }
+            } catch (err) {
+                statusDiv.className = "mt-3 text-sm font-medium text-red-600 block";
+                statusDiv.innerText = err.message;
+            }
+        });
+
+        // 3. AI AKADEMİK ANALİZ
+        document.getElementById("aiAnalysisForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!authToken) {
+                alert("Lütfen önce 1. Modülden Öğrenci Girişi yapınız!");
+                return;
+            }
+
+            const subject = document.getElementById("aiSubject").value;
+            const scores = document.getElementById("aiScores").value.split(",").map(s => parseFloat(s.trim()));
+            const topics = document.getElementById("aiTopics").value.split(",").map(t => t.trim());
+
+            try {
+                const res = await fetch(`${API_BASE}/ai/analyze-performance`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        subject: subject,
+                        exam_scores: scores,
+                        incorrect_topics: topics
+                    })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById("aiOverall").innerText = data.overall_performance;
+                    const planList = document.getElementById("aiPlanList");
+                    planList.innerHTML = "";
+                    data.recommended_study_plan.forEach(item => {
+                        const li = document.createElement("li");
+                        li.innerText = item;
+                        planList.appendChild(li);
+                    });
+                    document.getElementById("aiResultContainer").classList.remove("hidden");
+                } else {
+                    alert("Analiz hatası: " + (data.detail || "Bir sorun oluştu."));
+                }
+            } catch (err) {
+                alert("Bağlantı hatası: " + err.message);
+            }
+        });
     </script>
+
 </body>
 </html>
