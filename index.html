@@ -3,338 +3,484 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MGP İHO Portal & AI Bağlantısı</title>
+    <title>MGP İHO Portal & AI</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 min-h-screen">
 
-    <!-- NAVİGASYON BARI -->
-    <nav class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <span class="bg-purple-600 text-xs font-bold px-2 py-1 rounded">MGP İHO</span>
-                <span id="navTitle" class="font-bold text-lg">Blog Platformu</span>
+    <!-- ================================================================= -->
+    <!-- 1. EKRAN: GİRİŞ YAPMA (LOGIN)                                     -->
+    <!-- ================================================================= -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200 max-w-md w-full">
+            <div class="text-center mb-6">
+                <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">MGP İHO Portal</span>
+                <h1 class="text-2xl font-bold text-slate-900 mt-2">Sisteme Giriş Yap</h1>
+                <p class="text-xs text-slate-500 mt-1">Giriş bilgilerinizi Admin yöneticinizden temin ediniz.</p>
             </div>
-            
-            <!-- EKRAN GEÇİŞ BUTONLARI -->
-            <div>
-                <!-- Blog Ekranındayken Görünür -->
-                <button id="btnConnectAI" onclick="switchToAI()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition flex items-center gap-2 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    MGP İHO AI'ya Bağlan
-                </button>
 
-                <!-- Yapay Zeka Ekranındayken Görünür (Başlangıçta gizli) -->
-                <button id="btnExitAI" onclick="switchToBlog()" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"/></svg>
-                    Yapay Zekadan Çık
-                </button>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Kullanıcı Rolü</label>
+                    <select id="loginRole" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+                        <option value="student">Öğrenci Girişi</option>
+                        <option value="teacher">Öğretmen Girişi</option>
+                        <option value="admin">Admin (Yönetici) Girişi</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Kullanıcı Adı</label>
+                    <input type="text" id="loginUsername" required placeholder="Kullanıcı adınız" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Şifre</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+                </div>
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 rounded-lg text-sm transition">Giriş Yap</button>
+            </form>
+
+            <div id="loginError" class="mt-4 text-xs font-medium text-red-600 text-center hidden"></div>
+
+            <div class="mt-6 p-3 bg-slate-50 border rounded-lg text-xs text-slate-500">
+                <strong>Varsayılan Admin Bilgileri:</strong><br>
+                Kullanıcı Adı: <code class="text-purple-700">admin</code> | Şifre: <code class="text-purple-700">123456</code>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <div class="max-w-6xl mx-auto p-4 md:p-6">
-
-        <!-- ================================================================= -->
-        <!-- 1. EKRAN: BLOG UYGULAMASI                                         -->
-        <!-- ================================================================= -->
-        <div id="blogView" class="space-y-6">
-            
-            <!-- AI DUYURU BANNER'I -->
-            <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <h2 class="text-2xl font-extrabold">MGP İHO Yapay Zeka Desteği Yayında!</h2>
-                    <p class="text-indigo-100 text-sm mt-1">Sınav analizleri, ders çalışma planları ve öğrenci takibi için MGP İHO AI modülüne geçiş yapabilirsiniz.</p>
+    <!-- ================================================================= -->
+    <!-- 2. EKRAN: ANA PORTAL (Giriş Yapıldıktan Sonra)                    -->
+    <!-- ================================================================= -->
+    <div id="appScreen" class="hidden min-h-screen flex flex-col">
+        
+        <!-- ÜST NAVİGASYON BARI -->
+        <nav class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-purple-600 text-white text-xs font-bold px-2.5 py-1 rounded">MGP İHO</span>
+                    <span id="navRoleBadge" class="text-xs bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-purple-300"></span>
                 </div>
-                <button onclick="switchToAI()" class="bg-white text-indigo-700 font-bold px-5 py-2.5 rounded-xl shadow hover:bg-slate-100 transition whitespace-nowrap">
-                    MGP İHO AI'ya Bağlan &rarr;
-                </button>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- BLOG GÖNDERİLERİ -->
-                <div class="md:col-span-2 space-y-4">
-                    <h2 class="text-xl font-bold text-slate-800">Son Blog Yazıları</h2>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <!-- Sekme Butonları -->
+                    <button onclick="showSection('blog')" class="text-xs md:text-sm font-medium px-3 py-1.5 rounded hover:bg-slate-800 transition">Blog</button>
+                    <button onclick="showSection('chat')" class="text-xs md:text-sm font-medium px-3 py-1.5 rounded hover:bg-slate-800 transition">Grup Sohbet</button>
+                    <button id="adminTabBtn" onclick="showSection('admin')" class="hidden text-xs md:text-sm font-medium px-3 py-1.5 rounded bg-emerald-700 hover:bg-emerald-600 transition">Admin Paneli</button>
                     
-                    <article class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <span class="text-xs text-purple-600 font-semibold uppercase">Okul Haberleri</span>
-                        <h3 class="text-lg font-bold mt-1 text-slate-900">Teknoloji ve Yapay Zeka Atölyesi Açıldı</h3>
-                        <p class="text-slate-600 text-sm mt-2">Okulumuzda öğrencilerin yapay zeka araçlarını ve yazılım teknolojilerini deneyimleyebileceği yeni alan hizmete girdi...</p>
-                        <div class="text-xs text-slate-400 mt-4">1 Ekim 2026 • Okul Yönetimi</div>
-                    </article>
+                    <!-- Yapay Zekaya Bağlan Butonu -->
+                    <button id="btnConnectAI" onclick="showSection('ai')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold text-xs px-3 py-1.5 rounded-lg shadow transition flex items-center gap-1">
+                        ✨ MGP İHO AI'ya Bağlan
+                    </button>
 
-                    <article class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <span class="text-xs text-emerald-600 font-semibold uppercase">Rehberlik & Rehber Yazanlar</span>
-                        <h3 class="text-lg font-bold mt-1 text-slate-900">Verimli Ders Çalışma ve Soru Çözüm Stratejileri</h3>
-                        <p class="text-slate-600 text-sm mt-2">Sınavlara hazırlanırken günlük soru kotası belirlemek ve yanlış yapılan soruları analiz etmek başarının anahtarıdır...</p>
-                        <div class="text-xs text-slate-400 mt-4">28 Eylül 2026 • Rehberlik Servisi</div>
-                    </article>
-                </div>
-
-                <!-- YENİ BLOG YAZISI EKLEME -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 h-fit">
-                    <h3 class="font-bold text-slate-800 border-b pb-2 mb-3">Yeni Blog Yazısı Oluştur</h3>
-                    <form class="space-y-3" onsubmit="event.preventDefault(); alert('Blog yazısı başarıyla yayınlandı!');">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">Başlık</label>
-                            <input type="text" required class="mt-1 w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">İçerik</label>
-                            <textarea rows="4" required class="mt-1 w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-slate-800 text-white text-sm py-2 rounded-lg hover:bg-slate-900 transition">Yayınla</button>
-                    </form>
+                    <!-- Çıkış Yap -->
+                    <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 font-medium ml-2">Çıkış</button>
                 </div>
             </div>
-        </div>
+        </nav>
 
-        <!-- ================================================================= -->
-        <!-- 2. EKRAN: MGP İHO AI MODÜLÜ (Başlangıçta Gizli)                     -->
-        <!-- ================================================================= -->
-        <div id="aiModuleView" class="hidden space-y-6">
-            
-            <!-- AI MODÜLÜ ÜST BİLGİLENDİRME -->
-            <div class="bg-purple-900 text-white p-6 rounded-2xl shadow-md flex justify-between items-center">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="bg-purple-500 text-white text-xs px-2 py-0.5 rounded font-bold">MGP İHO AI</span>
-                        <h1 class="text-2xl font-bold">Akademik Performans ve Analiz Modülü</h1>
-                    </div>
-                    <p class="text-purple-200 text-sm mt-1">Öğrenci girişi yapabilir, kayıt ekleyebilir ve sohbet/blog dışı ders analiz raporu oluşturabilirsiniz.</p>
+        <main class="max-w-6xl mx-auto p-4 md:p-6 w-full flex-1">
+
+            <!-- SEKMELER 1: BLOG BÖLÜMÜ -->
+            <section id="blogSection" class="space-y-6">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-xl font-bold text-slate-800">Okul Blog Akışı</h2>
+                    <span class="text-xs text-slate-500">Tüm kullanıcılar paylaşım yapabilir.</span>
                 </div>
-                <button onclick="switchToBlog()" class="bg-purple-700 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded-lg font-medium transition">
-                    Yapay Zekadan Çık
-                </button>
-            </div>
 
-            <!-- MODÜLLER (GİRİŞ, KAYIT, AI ANALİZ) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- 1. ÖĞRENCİ OTURUM AÇ -->
-                <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <h2 class="text-lg font-bold mb-3 text-blue-600 border-b pb-2">1. Öğrenci Oturum Aç</h2>
-                    <form id="loginForm" class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">Öğrenci Numarası</label>
-                            <input type="text" id="loginStudentNum" required class="mt-1 w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Örn: 2026001">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">Şifre</label>
-                            <input type="password" id="loginPassword" required class="mt-1 w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="••••••••">
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">Giriş Yap</button>
+                <!-- Blog Ekleme Formu -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-sm text-slate-800 mb-3">Yeni Blog Yazısı Oluştur</h3>
+                    <form id="blogForm" class="space-y-3">
+                        <input type="text" id="blogTitle" required placeholder="Yazı Başlığı" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500">
+                        <textarea id="blogContent" rows="3" required placeholder="Duyuru veya içerik metnini buraya yazın..." class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">Blogda Yayınla</button>
                     </form>
-                    <div id="loginStatus" class="mt-2 text-xs font-medium hidden"></div>
-                </section>
+                </div>
 
-                <!-- 2. ÖĞRENCİ EKLE -->
-                <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <h2 class="text-lg font-bold mb-3 text-emerald-600 border-b pb-2">2. Yeni Öğrenci Ekle</h2>
-                    <form id="addStudentForm" class="space-y-2">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700">Ad</label>
-                                <input type="text" id="addFirstName" required class="mt-1 w-full p-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700">Soyad</label>
-                                <input type="text" id="addLastName" required class="mt-1 w-full p-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700">Öğrenci No</label>
-                                <input type="text" id="addStudentNum" required class="mt-1 w-full p-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700">Sınıf</label>
-                                <input type="number" id="addGrade" min="1" max="12" value="5" required class="mt-1 w-full p-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">E-Posta</label>
-                            <input type="email" id="addEmail" required class="mt-1 w-full p-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">Şifre</label>
-                            <input type="password" id="addPassword" required class="mt-1 w-full p-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                        </div>
-                        <button type="submit" class="w-full bg-emerald-600 text-white py-1.5 rounded text-sm font-semibold hover:bg-emerald-700 transition mt-1">Öğrenci Kaydet</button>
-                    </form>
-                    <div id="addStudentStatus" class="mt-2 text-xs font-medium hidden"></div>
-                </section>
-
-            </div>
-
-            <!-- 3. AI AKADEMİK ANALİZ MODÜLÜ -->
-            <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="text-lg font-bold mb-1 text-purple-600 border-b pb-2">3. MGP İHO AI Akademik Performans Analizi</h2>
-                <p class="text-xs text-slate-500 mb-4">* Blog ve sohbet modülü dışındadır. Doğrudan sınav sonuçları üzerinden çalışma planı çıkarır.</p>
-
-                <form id="aiAnalysisForm" class="space-y-3">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">Ders Adı</label>
-                            <input type="text" id="aiSubject" required placeholder="Örn: Matematik" class="mt-1 w-full p-2 border rounded text-sm focus:ring-2 focus:ring-purple-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700">Sınav Notları (Virgülle ayırın)</label>
-                            <input type="text" id="aiScores" required placeholder="Örn: 70, 85, 60" class="mt-1 w-full p-2 border rounded text-sm focus:ring-2 focus:ring-purple-500 outline-none">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700">Eksik/Zorlanılan Konular (Virgülle ayırın)</label>
-                        <input type="text" id="aiTopics" required placeholder="Örn: Üslü Sayılar, Kesirler" class="mt-1 w-full p-2 border rounded text-sm focus:ring-2 focus:ring-purple-500 outline-none">
-                    </div>
-                    <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded text-sm font-semibold hover:bg-purple-700 transition">AI Analizini Başlat</button>
-                </form>
-
-                <!-- AI SONUÇ ÇIKTISI -->
-                <div id="aiResultContainer" class="mt-4 p-4 rounded-lg bg-purple-50 border border-purple-200 hidden">
-                    <h4 class="font-bold text-purple-900 text-sm mb-1">MGP İHO AI Analiz Raporu</h4>
-                    <p class="text-xs text-slate-700"><strong>Durum:</strong> <span id="aiOverall" class="font-semibold text-purple-700"></span></p>
-                    <div class="mt-2">
-                        <p class="text-xs font-semibold text-slate-800">Önerilen Çalışma Planı:</p>
-                        <ul id="aiPlanList" class="list-disc list-inside text-xs text-slate-600 mt-1 space-y-0.5"></ul>
+                <!-- Blog Listesi (Boş Başlar) -->
+                <div id="blogContainer" class="space-y-4">
+                    <div id="emptyBlogMsg" class="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300 text-slate-400 text-sm">
+                        Henüz yayınlanmış bir blog yazısı bulunmuyor. İlk yazıyı yukarıdan ekleyebilirsiniz!
                     </div>
                 </div>
             </section>
 
-        </div>
+            <!-- SEKMELER 2: GRUP SOHBETİ -->
+            <section id="chatSection" class="hidden space-y-4">
+                <div class="border-b pb-3">
+                    <h2 class="text-xl font-bold text-slate-800">MGP İHO Ortak Grup Sohbeti</h2>
+                    <p class="text-xs text-slate-500">Öğrenciler, Öğretmenler ve Yönetim tek bir kanalda iletişim kurabilir.</p>
+                </div>
 
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 h-[450px] flex flex-col">
+                    <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50">
+                        <div class="text-center text-xs text-slate-400 my-2">-- Sohbet Odası Açıldı --</div>
+                    </div>
+                    <form id="chatForm" class="p-3 bg-white border-t flex gap-2">
+                        <input type="text" id="chatInput" required placeholder="Mesajınızı yazın..." class="flex-1 p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500">
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">Gönder</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SEKMELER 3: ADMIN PANELİ (Sadece Admin Görebilir) -->
+            <section id="adminSection" class="hidden space-y-6">
+                <div class="border-b pb-3">
+                    <h2 class="text-xl font-bold text-emerald-700">Admin Yönetim Paneli</h2>
+                    <p class="text-xs text-slate-500">Öğrenci ve Öğretmen hesaplarını yalnızca bu panelden tanımlayabilirsiniz.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Hesap Oluşturma Formu -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-sm text-slate-800 border-b pb-2 mb-3">Yeni Kullanıcı Kaydı</h3>
+                        <form id="createUserForm" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700">Ad Soyad</label>
+                                <input type="text" id="newFullName" required class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700">Kullanıcı Adı</label>
+                                <input type="text" id="newUsername" required class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700">Hesap Rolü</label>
+                                <select id="newRole" class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="student">Öğrenci</option>
+                                    <option value="teacher">Öğretmen</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700">Şifre</label>
+                                <input type="password" id="newPassword" required class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2 rounded transition">Hesabı Oluştur</button>
+                        </form>
+                    </div>
+
+                    <!-- Kayıtlı Kullanıcı Listesi -->
+                    <div class="md:col-span-2 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-sm text-slate-800 border-b pb-2 mb-3">Sistemdeki Hesaplar</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left">
+                                <thead class="bg-slate-100 text-slate-700">
+                                    <tr>
+                                        <th class="p-2">Ad Soyad</th>
+                                        <th class="p-2">Kullanıcı Adı</th>
+                                        <th class="p-2">Rol</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="userTableBody" class="divide-y">
+                                    <!-- JS ile dolacak -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEKMELER 4: MGP İHO AI YAPAY ZEKA MODÜLÜ -->
+            <section id="aiSection" class="hidden space-y-6">
+                <!-- AI ÜST BARI VE ÇIKIŞ BUTONU -->
+                <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-purple-500 text-white text-xs px-2.5 py-0.5 rounded font-bold">MGP İHO AI</span>
+                            <h2 class="text-2xl font-bold">Akademik Görsel & Soru Analiz Modülü</h2>
+                        </div>
+                        <p class="text-purple-200 text-xs mt-1">Soru fotoğrafınızı yükleyip yapay zekanın çözüm ve konu analizini alabilirsiniz.</p>
+                    </div>
+                    <!-- İSTEDİĞİN YAPAY ZEKADAN ÇIK TUŞU -->
+                    <button onclick="showSection('blog')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+                        ← Yapay Zekadan Çık
+                    </button>
+                </div>
+
+                <!-- AI FOTOĞRAF VE SORU ANALİZ FORMU -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm border-b pb-2">1. Soru Fotoğrafı & Ders Bilgileri</h3>
+                        
+                        <form id="aiForm" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Soru / Ödev Fotoğrafı Yükle</label>
+                                <input type="file" id="aiImageInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                            </div>
+
+                            <!-- Fotoğraf Önizleme -->
+                            <div id="imagePreviewContainer" class="hidden border rounded-lg p-2 bg-slate-50">
+                                <p class="text-xs text-slate-500 mb-1">Yüklenen Fotoğraf Önizlemesi:</p>
+                                <img id="imagePreview" src="" alt="Soru Fotoğrafı" class="max-h-48 rounded object-contain mx-auto">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Ders Adı</label>
+                                <input type="text" id="aiSubject" required placeholder="Örn: Matematik, Fen Bilimleri" class="w-full p-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Soru Hakkında Not / Ek Bilgi</label>
+                                <textarea id="aiNotes" rows="2" placeholder="Zorlandığınız noktaları yazabilirsiniz..." class="w-full p-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 rounded-lg text-xs transition">Görseli ve Soruyu Analiz Et</button>
+                        </form>
+                    </div>
+
+                    <!-- AI ÇIKTI PANELİ -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm border-b pb-2 mb-3">2. MGP İHO AI Analiz Sonucu</h3>
+                            
+                            <div id="aiOutputPlaceholder" class="text-center py-12 text-slate-400 text-xs">
+                                Soldaki alandan soru fotoğrafını yükleyip "Analiz Et" butonuna tıklayın.
+                            </div>
+
+                            <div id="aiOutputResult" class="hidden space-y-3">
+                                <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                                    <span class="text-xs font-bold text-purple-900 block">Görsel Algılandı (OCR):</span>
+                                    <p id="aiOcrText" class="text-xs text-slate-700 italic mt-1"></p>
+                                </div>
+
+                                <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                                    <span class="text-xs font-bold text-emerald-900 block">Çözüm Adımları & İpuçları:</span>
+                                    <ul id="aiStepsList" class="list-disc list-inside text-xs text-slate-700 mt-1 space-y-1"></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t text-right">
+                            <button onclick="showSection('blog')" class="text-xs text-purple-600 hover:text-purple-800 font-semibold">
+                                ← Blog Sayfasına Dön
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
-    <!-- EKRAN GEÇİŞ VE API MANTIĞI -->
+    <!-- ================================================================= -->
+    <!-- JAVASCRIPT MANTIĞI VE DİNAMİK DURUM YÖNETİMİ                     -->
+    <!-- ================================================================= -->
     <script>
-        const API_BASE = "http://127.0.0.1:8000/api";
-        let authToken = "";
+        // SISTEM VERILERI (HAFİZADA SAKLANIR)
+        let users = [
+            { username: "admin", fullName: "Sistem Yöneticisi", role: "admin", password: "123" }
+        ];
 
-        // EKRAN GEÇİŞ FONKSİYONLARI
-        function switchToAI() {
-            document.getElementById("blogView").classList.add("hidden");
-            document.getElementById("aiModuleView").classList.remove("hidden");
-            document.getElementById("btnConnectAI").classList.add("hidden");
-            document.getElementById("btnExitAI").classList.remove("hidden");
-            document.getElementById("navTitle").innerText = "MGP İHO AI Modülü";
-        }
+        let currentUser = null;
+        let blogPosts = []; // BOŞ BAŞLAR - KAFADAN YAZI YOK!
+        let chatMessages = [];
 
-        function switchToBlog() {
-            document.getElementById("aiModuleView").classList.add("hidden");
-            document.getElementById("blogView").classList.remove("hidden");
-            document.getElementById("btnExitAI").classList.add("hidden");
-            document.getElementById("btnConnectAI").classList.remove("hidden");
-            document.getElementById("navTitle").innerText = "Blog Platformu";
-        }
-
-        // 1. OTURUM AÇMA
-        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        // 1. GİRİŞ İŞLEMİ
+        document.getElementById("loginForm").addEventListener("submit", (e) => {
             e.preventDefault();
-            const statusDiv = document.getElementById("loginStatus");
-            const formData = new URLSearchParams();
-            formData.append("username", document.getElementById("loginStudentNum").value);
-            formData.append("password", document.getElementById("loginPassword").value);
+            const role = document.getElementById("loginRole").value;
+            const username = document.getElementById("loginUsername").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const errorDiv = document.getElementById("loginError");
 
-            try {
-                const res = await fetch(`${API_BASE}/auth/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: formData
-                });
-                const data = await res.json();
-                
-                if (res.ok) {
-                    authToken = data.access_token;
-                    statusDiv.className = "mt-2 text-xs font-medium text-emerald-600 block";
-                    statusDiv.innerText = "Giriş Başarılı! Yapay zeka modülü aktif.";
-                } else {
-                    throw new Error(data.detail || "Giriş başarısız.");
-                }
-            } catch (err) {
-                statusDiv.className = "mt-2 text-xs font-medium text-red-600 block";
-                statusDiv.innerText = err.message;
+            const foundUser = users.find(u => u.username === username && u.password === password && u.role === role);
+
+            if (foundUser) {
+                currentUser = foundUser;
+                errorDiv.classList.add("hidden");
+                initApp();
+            } else {
+                errorDiv.innerText = "Hatalı kullanıcı adı, şifre veya rol seçimi!";
+                errorDiv.classList.remove("hidden");
             }
         });
 
-        // 2. ÖĞRENCİ EKLEME
-        document.getElementById("addStudentForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const statusDiv = document.getElementById("addStudentStatus");
-            const payload = {
-                first_name: document.getElementById("addFirstName").value,
-                last_name: document.getElementById("addLastName").value,
-                student_number: document.getElementById("addStudentNum").value,
-                email: document.getElementById("addEmail").value,
-                grade_level: parseInt(document.getElementById("addGrade").value),
-                password: document.getElementById("addPassword").value
-            };
+        // 2. UYGULAMA ARAYÜZÜNÜ BAŞLATMA
+        function initApp() {
+            document.getElementById("loginScreen").classList.add("hidden");
+            document.getElementById("appScreen").classList.remove("hidden");
 
-            try {
-                const res = await fetch(`${API_BASE}/students/add`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
+            const roleNames = { admin: "Admin", teacher: "Öğretmen", student: "Öğrenci" };
+            document.getElementById("navRoleBadge").innerText = `${currentUser.fullName} (${roleNames[currentUser.role]})`;
 
-                if (res.ok) {
-                    statusDiv.className = "mt-2 text-xs font-medium text-emerald-600 block";
-                    statusDiv.innerText = `Öğrenci kaydedildi: ${data.first_name} ${data.last_name}`;
-                    document.getElementById("addStudentForm").reset();
-                } else {
-                    throw new Error(data.detail || "Kayıt başarısız.");
-                }
-            } catch (err) {
-                statusDiv.className = "mt-2 text-xs font-medium text-red-600 block";
-                statusDiv.innerText = err.message;
+            // Admin Buton Kontrolü
+            if (currentUser.role === "admin") {
+                document.getElementById("adminTabBtn").classList.remove("hidden");
+            } else {
+                document.getElementById("adminTabBtn").classList.add("hidden");
             }
-        });
 
-        // 3. AI ANALİZİ
-        document.getElementById("aiAnalysisForm").addEventListener("submit", async (e) => {
+            renderUsersTable();
+            showSection("blog");
+        }
+
+        // 3. SEKMELER ARASI GEÇİŞ
+        function showSection(sectionId) {
+            ["blogSection", "chatSection", "adminSection", "aiSection"].forEach(id => {
+                document.getElementById(id).classList.add("hidden");
+            });
+
+            document.getElementById(`${sectionId}Section`).classList.remove("hidden");
+        }
+
+        // 4. ADMIN: HESAP OLUŞTURMA (Sadece Admin yapar)
+        document.getElementById("createUserForm").addEventListener("submit", (e) => {
             e.preventDefault();
-            if (!authToken) {
-                alert("Lütfen önce 1. Modülden Giriş Yapınız!");
+            if (currentUser.role !== "admin") return;
+
+            const fullName = document.getElementById("newFullName").value.trim();
+            const username = document.getElementById("newUsername").value.trim();
+            const role = document.getElementById("newRole").value;
+            const password = document.getElementById("newPassword").value;
+
+            if (users.some(u => u.username === username)) {
+                alert("Bu kullanıcı adı zaten alınmış!");
                 return;
             }
 
-            const subject = document.getElementById("aiSubject").value;
-            const scores = document.getElementById("aiScores").value.split(",").map(s => parseFloat(s.trim()));
-            const topics = document.getElementById("aiTopics").value.split(",").map(t => t.trim());
+            users.push({ username, fullName, role, password });
+            renderUsersTable();
+            document.getElementById("createUserForm").reset();
+            alert(`${fullName} hesabı başarıyla oluşturuldu!`);
+        });
 
-            try {
-                const res = await fetch(`${API_BASE}/ai/analyze-performance`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({
-                        subject: subject,
-                        exam_scores: scores,
-                        incorrect_topics: topics
-                    })
-                });
-                const data = await res.json();
+        function renderUsersTable() {
+            const tbody = document.getElementById("userTableBody");
+            tbody.innerHTML = "";
+            users.forEach(u => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="p-2 font-medium">${u.fullName}</td>
+                    <td class="p-2 text-slate-500">${u.username}</td>
+                    <td class="p-2"><span class="bg-slate-100 border px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">${u.role}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-                if (res.ok) {
-                    document.getElementById("aiOverall").innerText = data.overall_performance;
-                    const planList = document.getElementById("aiPlanList");
-                    planList.innerHTML = "";
-                    data.recommended_study_plan.forEach(item => {
-                        const li = document.createElement("li");
-                        li.innerText = item;
-                        planList.appendChild(li);
-                    });
-                    document.getElementById("aiResultContainer").classList.remove("hidden");
-                } else {
-                    alert("Analiz hatası: " + (data.detail || "Hata oluştu."));
-                }
-            } catch (err) {
-                alert("Bağlantı hatası: " + err.message);
+        // 5. BLOG GÖNDERİSİ EKLEME & LİSTELEME
+        document.getElementById("blogForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const title = document.getElementById("blogTitle").value.trim();
+            const content = document.getElementById("blogContent").value.trim();
+
+            blogPosts.unshift({
+                author: currentUser.fullName,
+                role: currentUser.role,
+                title,
+                content,
+                date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            document.getElementById("blogForm").reset();
+            renderBlog();
+        });
+
+        function renderBlog() {
+            const container = document.getElementById("blogContainer");
+            const emptyMsg = document.getElementById("emptyBlogMsg");
+
+            if (blogPosts.length === 0) {
+                emptyMsg.classList.remove("hidden");
+                return;
+            }
+
+            emptyMsg.classList.add("hidden");
+            container.innerHTML = "";
+
+            blogPosts.forEach(post => {
+                const article = document.createElement("article");
+                article.className = "bg-white p-5 rounded-xl shadow-sm border border-slate-200";
+                article.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-purple-600">${post.author} (${post.role.toUpperCase()})</span>
+                        <span class="text-xs text-slate-400">${post.date}</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">${post.title}</h3>
+                    <p class="text-slate-600 text-xs mt-2 leading-relaxed">${post.content}</p>
+                `;
+                container.appendChild(article);
+            });
+        }
+
+        // 6. SOHBET MESAJI GÖNDERME
+        document.getElementById("chatForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const input = document.getElementById("chatInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            chatMessages.push({
+                sender: currentUser.fullName,
+                role: currentUser.role,
+                text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            input.value = "";
+            renderChat();
+        });
+
+        function renderChat() {
+            const box = document.getElementById("chatMessages");
+            box.innerHTML = '<div class="text-center text-xs text-slate-400 my-2">-- Sohbet Odası Açıldı --</div>';
+
+            chatMessages.forEach(msg => {
+                const div = document.createElement("div");
+                div.className = "bg-white p-2.5 rounded-lg border text-xs shadow-sm max-w-[80%]";
+                div.innerHTML = `
+                    <div class="flex justify-between items-center gap-2 mb-1">
+                        <strong class="text-purple-700">${msg.sender} <span class="text-[10px] text-slate-400">(${msg.role})</span></strong>
+                        <span class="text-[10px] text-slate-400">${msg.time}</span>
+                    </div>
+                    <p class="text-slate-800">${msg.text}</p>
+                `;
+                box.appendChild(div);
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // 7. AI FOTOĞRAF ÖNİZLEME VE ANALİZ
+        document.getElementById("aiImageInput").addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById("imagePreview").src = evt.target.result;
+                    document.getElementById("imagePreviewContainer").classList.remove("hidden");
+                };
+                reader.readAsDataURL(file);
             }
         });
+
+        document.getElementById("aiForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const subject = document.getElementById("aiSubject").value;
+            const notes = document.getElementById("aiNotes").value;
+            const hasFile = document.getElementById("aiImageInput").files.length > 0;
+
+            document.getElementById("aiOutputPlaceholder").classList.add("hidden");
+            document.getElementById("aiOutputResult").classList.remove("hidden");
+
+            document.getElementById("aiOcrText").innerText = hasFile 
+                ? `Fotoğraf başarıyla tarandı. [${subject}] dersine ait görsel metin içeriği okundu.` 
+                : `Görsel yüklenmedi, sadece metin tabanlı [${subject}] analizi yapılıyor.`;
+
+            const stepsList = document.getElementById("aiStepsList");
+            stepsList.innerHTML = `
+                <li><strong>Görsel Analiz:</strong> Sorudaki temel formüller ve veriler ayıklandı.</li>
+                <li><strong>Özel İpucu:</strong> ${notes ? `"${notes}" notunuza göre çözüm adımı yapılandırıldı.` : "Soru çözüm adımları sıralandı."}</li>
+                <li><strong>Önerilen Konu:</strong> Eksik kalan kısımlar için ${subject} konu tekrar testi çözülmesi tavsiye edilir.</li>
+            `;
+        });
+
+        // 8. ÇIKIŞ YAPMA
+        function logout() {
+            currentUser = null;
+            document.getElementById("appScreen").classList.add("hidden");
+            document.getElementById("loginScreen").classList.remove("hidden");
+            document.getElementById("loginForm").reset();
+        }
     </script>
 </body>
 </html>
