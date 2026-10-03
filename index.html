@@ -3,483 +3,1023 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MGP İHO Portal & AI</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-100 font-sans text-slate-800 min-h-screen">
+    <title>MGP İHO AI - Akıllı Okul Asistanı</title>
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-side: #111827;
+            --bg-card: #1f2937;
+            --bg-hover: #374151;
+            --accent-cyan: #06b6d4;
+            --accent-indigo: #6366f1;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --text-main: #f9fafb;
+            --text-sub: #9ca3af;
+        }
 
-    <!-- ================================================================= -->
-    <!-- 1. EKRAN: GİRİŞ YAPMA (LOGIN)                                     -->
-    <!-- ================================================================= -->
-    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200 max-w-md w-full">
-            <div class="text-center mb-6">
-                <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">MGP İHO Portal</span>
-                <h1 class="text-2xl font-bold text-slate-900 mt-2">Sisteme Giriş Yap</h1>
-                <p class="text-xs text-slate-500 mt-1">Giriş bilgilerinizi Admin yöneticinizden temin ediniz.</p>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+
+        /* Sol Sidebar */
+        .sidebar {
+            width: 300px;
+            background: var(--bg-side);
+            display: flex;
+            flex-direction: column;
+            padding: 18px;
+            justify-content: space-between;
+            border-right: 1px solid rgba(255,255,255,0.08);
+            z-index: 10;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .app-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .brand-info h2 { font-size: 15px; font-weight: 800; color: #fff; }
+        .brand-info p { font-size: 11px; color: var(--accent-cyan); font-weight: 600; }
+
+        .btn-new-chat {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        .btn-new-chat:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .menu-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; flex: 1; overflow-y: auto; }
+
+        .menu-btn {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .menu-btn:hover { background: var(--bg-hover); border-color: var(--accent-cyan); }
+
+        .user-profile-card {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-cyan);
+            background: var(--bg-side);
+        }
+
+        .user-info { flex: 1; overflow: hidden; }
+        .user-name { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-class { font-size: 11px; color: var(--accent-cyan); }
+
+        .icon-btn-small { background: none; border: none; color: var(--text-sub); cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .icon-btn-small:hover { color: #fff; }
+
+        /* Ana Alan */
+        .main-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-dark); position: relative; }
+
+        header {
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-title { font-size: 15px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+
+        .status-pill {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-dot { width: 8px; height: 8px; background: var(--accent-emerald); border-radius: 50%; animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* Okul Duyuru Bandı */
+        .announcements-banner {
+            background: linear-gradient(90deg, rgba(99,102,241,0.2), rgba(6,182,212,0.2));
+            border-bottom: 1px solid rgba(99,102,241,0.3);
+            padding: 10px 24px;
+            font-size: 12.5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #e0e7ff;
+        }
+
+        #chat-box {
+            flex: 1;
+            padding: 24px 18%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        /* Mesaj Balonları & Animasyon */
+        .message-row { display: flex; gap: 14px; align-items: flex-start; animation: fadeInUp 0.3s ease-out forwards; }
+        .user-row { justify-content: flex-end; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+        .ai-avatar-bg { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo)); color: #fff; }
+
+        .message-content {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-size: 14.5px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .user-msg { background: linear-gradient(135deg, var(--accent-indigo), #4338ca); color: #fff; border-top-right-radius: 4px; }
+        .ai-msg { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); color: var(--text-main); border-top-left-radius: 4px; }
+
+        /* Yazma Daktilo İmleç Efekti */
+        .typing-cursor::after {
+            content: '▌';
+            color: var(--accent-cyan);
+            animation: blinkCursor 0.6s infinite;
+            margin-left: 3px;
+        }
+        @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Input Bar */
+        .input-container { padding: 16px 18% 28px 18%; background: transparent; }
+        .floating-input {
+            background: var(--bg-side);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 28px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: 0.2s;
+        }
+        .floating-input:focus-within { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.2); }
+
+        #user-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 15px;
+            padding: 10px 0;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .action-btn:hover { color: var(--accent-cyan); background: var(--bg-hover); }
+        .mic-active { color: var(--accent-rose) !important; animation: pulse 1s infinite; }
+
+        /* Modallar */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: var(--bg-side);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 24px;
+            width: 500px;
+            max-width: 92%;
+            max-height: 88vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .modal-card h3 { font-size: 18px; color: var(--accent-cyan); font-weight: 700; }
+        .modal-card label { font-size: 12px; color: var(--text-sub); font-weight: 600; margin-bottom: -6px; }
+        .modal-card input, .modal-card select, .modal-card textarea {
+            background: var(--bg-dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 11px 14px;
+            color: #fff;
+            outline: none;
+            font-size: 13.5px;
+            width: 100%;
+        }
+        .modal-card input:focus { border-color: var(--accent-cyan); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--bg-card); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+
+        /* Tab Düzeni */
+        .tab-buttons { display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; overflow-x: auto; }
+        .tab-btn {
+            background: var(--bg-card);
+            border: none;
+            color: var(--text-sub);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .tab-btn.active { background: var(--accent-cyan); color: #000; }
+
+        .tab-content { display: none; flex-direction: column; gap: 12px; }
+        .tab-content.active { display: flex; }
+
+        .calc-result-box {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 12px;
+            border-radius: 10px;
+            color: var(--accent-emerald);
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Giriş & Kayıt / Şifremi Unuttum Modalı -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-card" style="width: 380px;">
+            <div style="text-align: center;">
+                <div class="app-logo" style="margin: 0 auto 10px auto;">🏫</div>
+                <h3 id="auth-title">MGP İHO AI Giriş</h3>
+                <p style="font-size: 12px; color: var(--text-sub); margin-top: 4px;">Muzafferda Güzide Pulur İHO Sistem Portalı</p>
             </div>
 
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Kullanıcı Rolü</label>
-                    <select id="loginRole" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none">
-                        <option value="student">Öğrenci Girişi</option>
-                        <option value="teacher">Öğretmen Girişi</option>
-                        <option value="admin">Admin (Yönetici) Girişi</option>
-                    </select>
+            <div id="auth-form-login" style="display: flex; flex-direction: column; gap: 12px;">
+                <input type="text" id="login-username" placeholder="Kullanıcı Adı">
+                <input type="password" id="login-password" placeholder="Şifre">
+                <button class="btn-primary" onclick="handleLogin()">Giriş Yap</button>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--accent-cyan); cursor: pointer; margin-top: 4px;">
+                    <span onclick="showAuthTab('register')">Kayıt Ol</span>
+                    <span onclick="showAuthTab('forgot')">Şifremi Unuttum</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Kullanıcı Adı</label>
-                    <input type="text" id="loginUsername" required placeholder="Kullanıcı adınız" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Şifre</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none">
-                </div>
-                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 rounded-lg text-sm transition">Giriş Yap</button>
-            </form>
+            </div>
 
-            <div id="loginError" class="mt-4 text-xs font-medium text-red-600 text-center hidden"></div>
+            <div id="auth-form-register" style="display: none; flex-direction: column; gap: 12px;">
+                <input type="text" id="reg-name" placeholder="Ad Soyad (Örn: Ahmet Koyuncu)">
+                <input type="text" id="reg-class" placeholder="Sınıf / Şube (Örn: 7/H)">
+                <input type="text" id="reg-username" placeholder="Kullanıcı Adı Seçin">
+                <input type="password" id="reg-password" placeholder="Şifre Oluşturun">
+                <input type="text" id="reg-sec-q" placeholder="Güvenlik Sorusu (Örn: En sevdiğin öğretmen?)">
+                <input type="text" id="reg-sec-a" placeholder="Güvenlik Cevabı">
+                <button class="btn-primary" onclick="handleRegister()">Kayıt Ol</button>
+                <div style="text-align: center; font-size: 12px; color: var(--accent-cyan); cursor: pointer;" onclick="showAuthTab('login')">Zaten hesabın var mı? Giriş Yap</div>
+            </div>
 
-            <div class="mt-6 p-3 bg-slate-50 border rounded-lg text-xs text-slate-500">
-                <strong>Varsayılan Admin Bilgileri:</strong><br>
-                Kullanıcı Adı: <code class="text-purple-700">admin</code> | Şifre: <code class="text-purple-700">123456</code>
+            <div id="auth-form-forgot" style="display: none; flex-direction: column; gap: 12px;">
+                <input type="text" id="forgot-username" placeholder="Kullanıcı Adınız">
+                <button class="btn-primary" onclick="checkForgotUser()">Güvenlik Sorusunu Getir</button>
+                
+                <div id="forgot-sec-area" style="display: none; flex-direction: column; gap: 10px;">
+                    <p id="forgot-sec-q-text" style="font-size: 12px; color: var(--accent-cyan); font-weight: 700;"></p>
+                    <input type="text" id="forgot-sec-a-input" placeholder="Cevabınız">
+                    <input type="password" id="forgot-new-pass" placeholder="Yeni Şifre">
+                    <button class="btn-primary" onclick="handleResetPassword()">Şifreyi Güncelle</button>
+                </div>
+                <div style="text-align: center; font-size: 12px; color: var(--accent-cyan); cursor: pointer;" onclick="showAuthTab('login')">Giriş Ekranına Dön</div>
             </div>
         </div>
     </div>
 
-    <!-- ================================================================= -->
-    <!-- 2. EKRAN: ANA PORTAL (Giriş Yapıldıktan Sonra)                    -->
-    <!-- ================================================================= -->
-    <div id="appScreen" class="hidden min-h-screen flex flex-col">
-        
-        <!-- ÜST NAVİGASYON BARI -->
-        <nav class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
-            <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <span class="bg-purple-600 text-white text-xs font-bold px-2.5 py-1 rounded">MGP İHO</span>
-                    <span id="navRoleBadge" class="text-xs bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-purple-300"></span>
-                </div>
-
-                <div class="flex items-center gap-2 md:gap-4">
-                    <!-- Sekme Butonları -->
-                    <button onclick="showSection('blog')" class="text-xs md:text-sm font-medium px-3 py-1.5 rounded hover:bg-slate-800 transition">Blog</button>
-                    <button onclick="showSection('chat')" class="text-xs md:text-sm font-medium px-3 py-1.5 rounded hover:bg-slate-800 transition">Grup Sohbet</button>
-                    <button id="adminTabBtn" onclick="showSection('admin')" class="hidden text-xs md:text-sm font-medium px-3 py-1.5 rounded bg-emerald-700 hover:bg-emerald-600 transition">Admin Paneli</button>
-                    
-                    <!-- Yapay Zekaya Bağlan Butonu -->
-                    <button id="btnConnectAI" onclick="showSection('ai')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold text-xs px-3 py-1.5 rounded-lg shadow transition flex items-center gap-1">
-                        ✨ MGP İHO AI'ya Bağlan
-                    </button>
-
-                    <!-- Çıkış Yap -->
-                    <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 font-medium ml-2">Çıkış</button>
-                </div>
+    <!-- Admin Yönetim Paneli Modalı -->
+    <div id="admin-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-card" style="width: 580px;">
+            <h3>👑 Admin Yönetim Paneli</h3>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchAdminTab('announcements')">📢 Okul Duyuruları</button>
+                <button class="tab-btn" onclick="switchAdminTab('students')">👥 Kayıtlı Öğrenciler</button>
+                <button class="tab-btn" onclick="switchAdminTab('schedule')">📅 Okul Genel Ders Programı</button>
             </div>
-        </nav>
 
-        <main class="max-w-6xl mx-auto p-4 md:p-6 w-full flex-1">
+            <!-- Admin Tab 1: Duyuru Ekleme -->
+            <div id="admin-tab-announcements" class="tab-content active">
+                <label>Yeni Okul Duyurusu Yayınla:</label>
+                <input type="text" id="admin-ann-title" placeholder="Duyuru Başlığı (Örn: Cuma Günü Deneme Sınavı)">
+                <textarea id="admin-ann-body" rows="3" placeholder="Duyuru Detayı..."></textarea>
+                <button class="btn-primary" onclick="postAnnouncement()">📢 Duyuruyu Yayınla</button>
+                
+                <label style="margin-top: 10px;">Mevcut Duyurular:</label>
+                <div id="admin-ann-list" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
 
-            <!-- SEKMELER 1: BLOG BÖLÜMÜ -->
-            <section id="blogSection" class="space-y-6">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h2 class="text-xl font-bold text-slate-800">Okul Blog Akışı</h2>
-                    <span class="text-xs text-slate-500">Tüm kullanıcılar paylaşım yapabilir.</span>
-                </div>
+            <!-- Admin Tab 2: Öğrenci Yönetimi -->
+            <div id="admin-tab-students" class="tab-content">
+                <label>Kayıtlı Öğrenciler & Şifre Sıfırlama:</label>
+                <div id="admin-students-list" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
 
-                <!-- Blog Ekleme Formu -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-sm text-slate-800 mb-3">Yeni Blog Yazısı Oluştur</h3>
-                    <form id="blogForm" class="space-y-3">
-                        <input type="text" id="blogTitle" required placeholder="Yazı Başlığı" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500">
-                        <textarea id="blogContent" rows="3" required placeholder="Duyuru veya içerik metnini buraya yazın..." class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">Blogda Yayınla</button>
-                    </form>
-                </div>
+            <!-- Admin Tab 3: Genel Ders Programı -->
+            <div id="admin-tab-schedule" class="tab-content">
+                <label>Okul Genel Ders Takvimi:</label>
+                <input type="text" id="adm-sch-mon" placeholder="Pazartesi Dersleri">
+                <input type="text" id="adm-sch-tue" placeholder="Salı Dersleri">
+                <input type="text" id="adm-sch-wed" placeholder="Çarşamba Dersleri">
+                <input type="text" id="adm-sch-thu" placeholder="Perşembe Dersleri">
+                <input type="text" id="adm-sch-fri" placeholder="Cuma Dersleri">
+                <button class="btn-primary" onclick="saveAdminSchedule()">Programı Tüm Okula Uygula</button>
+            </div>
 
-                <!-- Blog Listesi (Boş Başlar) -->
-                <div id="blogContainer" class="space-y-4">
-                    <div id="emptyBlogMsg" class="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300 text-slate-400 text-sm">
-                        Henüz yayınlanmış bir blog yazısı bulunmuyor. İlk yazıyı yukarıdan ekleyebilirsiniz!
-                    </div>
-                </div>
-            </section>
-
-            <!-- SEKMELER 2: GRUP SOHBETİ -->
-            <section id="chatSection" class="hidden space-y-4">
-                <div class="border-b pb-3">
-                    <h2 class="text-xl font-bold text-slate-800">MGP İHO Ortak Grup Sohbeti</h2>
-                    <p class="text-xs text-slate-500">Öğrenciler, Öğretmenler ve Yönetim tek bir kanalda iletişim kurabilir.</p>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 h-[450px] flex flex-col">
-                    <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50">
-                        <div class="text-center text-xs text-slate-400 my-2">-- Sohbet Odası Açıldı --</div>
-                    </div>
-                    <form id="chatForm" class="p-3 bg-white border-t flex gap-2">
-                        <input type="text" id="chatInput" required placeholder="Mesajınızı yazın..." class="flex-1 p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500">
-                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">Gönder</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- SEKMELER 3: ADMIN PANELİ (Sadece Admin Görebilir) -->
-            <section id="adminSection" class="hidden space-y-6">
-                <div class="border-b pb-3">
-                    <h2 class="text-xl font-bold text-emerald-700">Admin Yönetim Paneli</h2>
-                    <p class="text-xs text-slate-500">Öğrenci ve Öğretmen hesaplarını yalnızca bu panelden tanımlayabilirsiniz.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Hesap Oluşturma Formu -->
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <h3 class="font-bold text-sm text-slate-800 border-b pb-2 mb-3">Yeni Kullanıcı Kaydı</h3>
-                        <form id="createUserForm" class="space-y-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700">Ad Soyad</label>
-                                <input type="text" id="newFullName" required class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700">Kullanıcı Adı</label>
-                                <input type="text" id="newUsername" required class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700">Hesap Rolü</label>
-                                <select id="newRole" class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
-                                    <option value="student">Öğrenci</option>
-                                    <option value="teacher">Öğretmen</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700">Şifre</label>
-                                <input type="password" id="newPassword" required class="mt-1 w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-500">
-                            </div>
-                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2 rounded transition">Hesabı Oluştur</button>
-                        </form>
-                    </div>
-
-                    <!-- Kayıtlı Kullanıcı Listesi -->
-                    <div class="md:col-span-2 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <h3 class="font-bold text-sm text-slate-800 border-b pb-2 mb-3">Sistemdeki Hesaplar</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-xs text-left">
-                                <thead class="bg-slate-100 text-slate-700">
-                                    <tr>
-                                        <th class="p-2">Ad Soyad</th>
-                                        <th class="p-2">Kullanıcı Adı</th>
-                                        <th class="p-2">Rol</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="userTableBody" class="divide-y">
-                                    <!-- JS ile dolacak -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SEKMELER 4: MGP İHO AI YAPAY ZEKA MODÜLÜ -->
-            <section id="aiSection" class="hidden space-y-6">
-                <!-- AI ÜST BARI VE ÇIKIŞ BUTONU -->
-                <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="bg-purple-500 text-white text-xs px-2.5 py-0.5 rounded font-bold">MGP İHO AI</span>
-                            <h2 class="text-2xl font-bold">Akademik Görsel & Soru Analiz Modülü</h2>
-                        </div>
-                        <p class="text-purple-200 text-xs mt-1">Soru fotoğrafınızı yükleyip yapay zekanın çözüm ve konu analizini alabilirsiniz.</p>
-                    </div>
-                    <!-- İSTEDİĞİN YAPAY ZEKADAN ÇIK TUŞU -->
-                    <button onclick="showSection('blog')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
-                        ← Yapay Zekadan Çık
-                    </button>
-                </div>
-
-                <!-- AI FOTOĞRAF VE SORU ANALİZ FORMU -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                        <h3 class="font-bold text-slate-800 text-sm border-b pb-2">1. Soru Fotoğrafı & Ders Bilgileri</h3>
-                        
-                        <form id="aiForm" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Soru / Ödev Fotoğrafı Yükle</label>
-                                <input type="file" id="aiImageInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
-                            </div>
-
-                            <!-- Fotoğraf Önizleme -->
-                            <div id="imagePreviewContainer" class="hidden border rounded-lg p-2 bg-slate-50">
-                                <p class="text-xs text-slate-500 mb-1">Yüklenen Fotoğraf Önizlemesi:</p>
-                                <img id="imagePreview" src="" alt="Soru Fotoğrafı" class="max-h-48 rounded object-contain mx-auto">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Ders Adı</label>
-                                <input type="text" id="aiSubject" required placeholder="Örn: Matematik, Fen Bilimleri" class="w-full p-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-purple-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Soru Hakkında Not / Ek Bilgi</label>
-                                <textarea id="aiNotes" rows="2" placeholder="Zorlandığınız noktaları yazabilirsiniz..." class="w-full p-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-                            </div>
-
-                            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 rounded-lg text-xs transition">Görseli ve Soruyu Analiz Et</button>
-                        </form>
-                    </div>
-
-                    <!-- AI ÇIKTI PANELİ -->
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-sm border-b pb-2 mb-3">2. MGP İHO AI Analiz Sonucu</h3>
-                            
-                            <div id="aiOutputPlaceholder" class="text-center py-12 text-slate-400 text-xs">
-                                Soldaki alandan soru fotoğrafını yükleyip "Analiz Et" butonuna tıklayın.
-                            </div>
-
-                            <div id="aiOutputResult" class="hidden space-y-3">
-                                <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                                    <span class="text-xs font-bold text-purple-900 block">Görsel Algılandı (OCR):</span>
-                                    <p id="aiOcrText" class="text-xs text-slate-700 italic mt-1"></p>
-                                </div>
-
-                                <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                                    <span class="text-xs font-bold text-emerald-900 block">Çözüm Adımları & İpuçları:</span>
-                                    <ul id="aiStepsList" class="list-disc list-inside text-xs text-slate-700 mt-1 space-y-1"></ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 pt-3 border-t text-right">
-                            <button onclick="showSection('blog')" class="text-xs text-purple-600 hover:text-purple-800 font-semibold">
-                                ← Blog Sayfasına Dön
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
+            <button class="btn-primary btn-secondary" onclick="closeAdminModal()">Admin Panelini Kapat</button>
+        </div>
     </div>
 
-    <!-- ================================================================= -->
-    <!-- JAVASCRIPT MANTIĞI VE DİNAMİK DURUM YÖNETİMİ                     -->
-    <!-- ================================================================= -->
+    <!-- Hepsi Bir Arada: Sınav & Not Araçları Modalı -->
+    <div id="grade-tools-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <h3>📊 Sınav & Not Hesaplama Araçları</h3>
+
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchGradeTab('tr')">📝 Türkçe 3'lü Not</button>
+                <button class="tab-btn" onclick="switchGradeTab('iokbs')">🏆 İOKBS Bursluluk</button>
+                <button class="tab-btn" onclick="switchGradeTab('lgs')">🎯 LGS Net & Puan</button>
+                <button class="tab-btn" onclick="switchGradeTab('eokul')">📲 e-Okul Not Analizi</button>
+            </div>
+
+            <!-- Tab 1: Türkçe 3'lü -->
+            <div id="grade-tab-tr" class="tab-content active">
+                <p style="font-size: 11px; color: var(--text-sub);">MEB Yönetmeliği: Yazılı (%50) + Dinleme (%25) + Konuşma (%25)</p>
+                <label>1. Yazılı Sınav Notu (%50):</label>
+                <input type="number" id="tr-written" placeholder="Örn: 85">
+                <label>Dinleme Sınav Notu (%25):</label>
+                <input type="number" id="tr-listen" placeholder="Örn: 90">
+                <label>Konuşma Sınav Notu (%25):</label>
+                <input type="number" id="tr-speak" placeholder="Örn: 100">
+                <button class="btn-primary" onclick="calcTRGrade()">Hesapla</button>
+                <div id="tr-res" class="calc-result-box" style="display:none;"></div>
+            </div>
+
+            <!-- Tab 2: İOKBS -->
+            <div id="grade-tab-iokbs" class="tab-content">
+                <p style="font-size: 11px; color: var(--text-sub);">25'er Soruluk Testler (3 Yanlış 1 Doğruyu Götürür)</p>
+                <label>Türkçe Netiniz:</label>
+                <input type="number" id="iokbs-tr" placeholder="Örn: 22.33">
+                <label>Matematik Netiniz:</label>
+                <input type="number" id="iokbs-mat" placeholder="Örn: 20.00">
+                <label>Fen Bilimleri Netiniz:</label>
+                <input type="number" id="iokbs-fen" placeholder="Örn: 23.00">
+                <label>Sosyal Bilgiler Netiniz:</label>
+                <input type="number" id="iokbs-sos" placeholder="Örn: 21.66">
+                <button class="btn-primary" onclick="calcIOKBS()">Puan Tahmin Et</button>
+                <div id="iokbs-res" class="calc-result-box" style="display:none;"></div>
+            </div>
+
+            <!-- Tab 3: LGS -->
+            <div id="grade-tab-lgs" class="tab-content">
+                <label>Türkçe Net (20 Soru):</label><input type="number" id="lgs-tr" placeholder="Örn: 18">
+                <label>Matematik Net (20 Soru):</label><input type="number" id="lgs-mat" placeholder="Örn: 15">
+                <label>Fen Bilimleri Net (20 Soru):</label><input type="number" id="lgs-fen" placeholder="Örn: 19">
+                <label>İnkılap Tarihi Net (10 Soru):</label><input type="number" id="lgs-ink" placeholder="Örn: 10">
+                <label>Din Kültürü Net (10 Soru):</label><input type="number" id="lgs-din" placeholder="Örn: 10">
+                <label>Yabancı Dil Net (10 Soru):</label><input type="number" id="lgs-ing" placeholder="Örn: 9">
+                <button class="btn-primary" onclick="calcLGS()">LGS Puanını Hesapla</button>
+                <div id="lgs-res" class="calc-result-box" style="display:none;"></div>
+            </div>
+
+            <!-- Tab 4: e-Okul -->
+            <div id="grade-tab-eokul" class="tab-content">
+                <p style="font-size: 11px; color: var(--text-sub);">e-Okul notlarınızı kopyalayıp buraya yapıştırın. Yapay zeka tüm karnenizi analiz etsin.</p>
+                <textarea id="eokul-text" rows="5" placeholder="Örn: Türkçe: 85, Matematik: 70, Fen: 90..."></textarea>
+                <button class="btn-primary" onclick="analyzeEOkul()">Analiz Et ve Çalışma Planı Çıkar</button>
+            </div>
+
+            <button class="btn-primary btn-secondary" onclick="closeGradeToolsModal()">Kapat</button>
+        </div>
+    </div>
+
+    <!-- Profil & Ses / Fotoğraf Yükleme Modalı -->
+    <div id="profile-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-card" style="width: 420px;">
+            <h3>⚙️ Öğrenci Profili & Ayarlar</h3>
+
+            <div style="text-align: center; margin-bottom: 10px;">
+                <img id="profile-preview-img" src="" class="user-avatar-img" style="width: 70px; height: 70px; margin-bottom: 6px;">
+                <br>
+                <label class="btn-primary" style="display: inline-block; padding: 6px 12px; font-size: 11px; cursor: pointer;">
+                    📷 Fotoğraf Seç
+                    <input type="file" id="photo-upload-input" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
+                </label>
+            </div>
+
+            <label>Ad Soyad:</label>
+            <input type="text" id="prof-fullname">
+
+            <label>Sınıf / Şube:</label>
+            <input type="text" id="prof-class">
+
+            <label>Yapay Zeka Ses Tonu (Pitch):</label>
+            <input type="range" id="voice-pitch" min="0.5" max="1.8" step="0.1" value="1.0">
+
+            <button class="btn-primary" onclick="saveProfileSettings()">Değişiklikleri Kaydet</button>
+            <button class="btn-primary btn-secondary" onclick="closeProfileModal()">İptal</button>
+        </div>
+    </div>
+
+    <!-- Sol Sidebar -->
+    <div class="sidebar">
+        <div>
+            <div class="brand-header">
+                <div class="app-logo">🏫</div>
+                <div class="brand-info">
+                    <h2>MGP İHO AI</h2>
+                    <p>Akıllı Okul Asistanı</p>
+                </div>
+            </div>
+
+            <button class="btn-new-chat" onclick="clearChat()">
+                <span>➕</span> Yeni Sohbet
+            </button>
+
+            <div class="menu-list">
+                <button class="menu-btn" onclick="openGradeToolsModal()">📊 Sınav & Not Araçları</button>
+                <button class="menu-btn" onclick="quickPrompt('Haftalık ders programımda hangi gün hangi dersler var?')">📅 Haftalık Ders Programım</button>
+                <button class="menu-btn" id="btn-admin-panel" style="display:none; background: rgba(244,63,94,0.15); border-color: rgba(244,63,94,0.3); color: var(--accent-rose);" onclick="openAdminModal()">👑 Admin Paneli</button>
+            </div>
+        </div>
+
+        <div class="user-profile-card">
+            <img id="sidebar-user-avatar" src="" class="user-avatar-img">
+            <div class="user-info">
+                <div class="user-name" id="sidebar-user-name">Öğrenci</div>
+                <div class="user-class" id="sidebar-user-class">Sınıf -</div>
+            </div>
+            <button class="icon-btn-small" onclick="openProfileModal()" title="Profil & Ayarlar">⚙️</button>
+            <button class="icon-btn-small" onclick="logout()" title="Çıkış Yap" style="color: var(--accent-rose);">✕</button>
+        </div>
+    </div>
+
+    <!-- Ana Chat Alanı -->
+    <div class="main-container">
+        <header>
+            <div class="header-title">
+                <span>🏫</span> Muzafferda Güzide Pulur İHO Özel Yapay Zekası
+            </div>
+            <div class="status-pill">
+                <div class="status-dot"></div> CANLI SOHBET
+            </div>
+        </header>
+
+        <!-- Okul Duyuru Bandı -->
+        <div id="announcement-banner" class="announcements-banner" style="display: none;">
+            <span>📢 <b>Okul Duyurusu:</b> <span id="banner-text"></span></span>
+            <button onclick="document.getElementById('announcement-banner').style.display='none'" style="background:none; border:none; color:#fff; cursor:pointer;">✕</button>
+        </div>
+
+        <div id="chat-box">
+            <div class="message-row">
+                <div class="msg-avatar ai-avatar-bg">🏫</div>
+                <div class="message-content ai-msg">
+                    Selam! Ben <b>MGP İHO AI</b>. Derslerinde, ödevlerinde, yazılı sınavlarında ve LGS/İOKBS hazırlığında sana rehberlik etmek için buradayım. 
+                    <br><br>
+                    Sol taraftaki <b>📊 Sınav & Not Araçları</b> butonundan not ortalamanı hesaplayabilir veya bana derslerinle ilgili her türlü soruyu sorabilirsin!
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="floating-input">
+                <input type="text" id="user-input" placeholder="MGP İHO AI'ya bir ders sorusu sorun..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="action-btn" id="mic-btn" title="Sesli Konuş" onclick="toggleSpeech()">🎙️</button>
+                <button class="action-btn" style="color: var(--accent-cyan);" onclick="sendMessage()">➔</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // SISTEM VERILERI (HAFİZADA SAKLANIR)
-        let users = [
-            { username: "admin", fullName: "Sistem Yöneticisi", role: "admin", password: "123" }
-        ];
+        // Veri Modelleri
+        let activeUserKey = localStorage.getItem('mgp_active_user_key');
+        let usersData = JSON.parse(localStorage.getItem('mgp_users_data') || '{}');
+        let announcements = JSON.parse(localStorage.getItem('mgp_announcements') || '[]');
+        let adminSchedule = JSON.parse(localStorage.getItem('mgp_admin_schedule') || '{"mon":"Matematik, Türkçe","tue":"Fen, İngilizce","wed":"Matematik, Bilişim","thu":"Türkçe, Görsel","fri":"Deneme Sınavı"}');
 
-        let currentUser = null;
-        let blogPosts = []; // BOŞ BAŞLAR - KAFADAN YAZI YOK!
-        let chatMessages = [];
+        let chatHistory = [];
+        let recognition = null;
+        let isListening = false;
 
-        // 1. GİRİŞ İŞLEMİ
-        document.getElementById("loginForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const role = document.getElementById("loginRole").value;
-            const username = document.getElementById("loginUsername").value.trim();
-            const password = document.getElementById("loginPassword").value;
-            const errorDiv = document.getElementById("loginError");
-
-            const foundUser = users.find(u => u.username === username && u.password === password && u.role === role);
-
-            if (foundUser) {
-                currentUser = foundUser;
-                errorDiv.classList.add("hidden");
-                initApp();
+        window.onload = function() {
+            if (!activeUserKey || (!usersData[activeUserKey] && activeUserKey !== 'admin')) {
+                document.getElementById('auth-modal').style.display = 'flex';
             } else {
-                errorDiv.innerText = "Hatalı kullanıcı adı, şifre veya rol seçimi!";
-                errorDiv.classList.remove("hidden");
+                document.getElementById('auth-modal').style.display = 'none';
+                loadUserProfileUI();
             }
-        });
+            checkAnnouncements();
+            initSpeech();
+            resetSystemPrompt();
+        };
 
-        // 2. UYGULAMA ARAYÜZÜNÜ BAŞLATMA
-        function initApp() {
-            document.getElementById("loginScreen").classList.add("hidden");
-            document.getElementById("appScreen").classList.remove("hidden");
-
-            const roleNames = { admin: "Admin", teacher: "Öğretmen", student: "Öğrenci" };
-            document.getElementById("navRoleBadge").innerText = `${currentUser.fullName} (${roleNames[currentUser.role]})`;
-
-            // Admin Buton Kontrolü
-            if (currentUser.role === "admin") {
-                document.getElementById("adminTabBtn").classList.remove("hidden");
-            } else {
-                document.getElementById("adminTabBtn").classList.add("hidden");
-            }
-
-            renderUsersTable();
-            showSection("blog");
+        // Auth İşlemleri
+        function showAuthTab(tab) {
+            document.getElementById('auth-form-login').style.display = tab === 'login' ? 'flex' : 'none';
+            document.getElementById('auth-form-register').style.display = tab === 'register' ? 'flex' : 'none';
+            document.getElementById('auth-form-forgot').style.display = tab === 'forgot' ? 'flex' : 'none';
+            document.getElementById('auth-title').innerText = tab === 'login' ? 'MGP İHO AI Giriş' : (tab === 'register' ? 'Öğrenci Kaydı' : 'Şifremi Unuttum');
         }
 
-        // 3. SEKMELER ARASI GEÇİŞ
-        function showSection(sectionId) {
-            ["blogSection", "chatSection", "adminSection", "aiSection"].forEach(id => {
-                document.getElementById(id).classList.add("hidden");
-            });
+        function handleLogin() {
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value.trim();
 
-            document.getElementById(`${sectionId}Section`).classList.remove("hidden");
-        }
-
-        // 4. ADMIN: HESAP OLUŞTURMA (Sadece Admin yapar)
-        document.getElementById("createUserForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            if (currentUser.role !== "admin") return;
-
-            const fullName = document.getElementById("newFullName").value.trim();
-            const username = document.getElementById("newUsername").value.trim();
-            const role = document.getElementById("newRole").value;
-            const password = document.getElementById("newPassword").value;
-
-            if (users.some(u => u.username === username)) {
-                alert("Bu kullanıcı adı zaten alınmış!");
+            if (u === 'admin' && p === 'admin123') {
+                activeUserKey = 'admin';
+                localStorage.setItem('mgp_active_user_key', 'admin');
+                document.getElementById('auth-modal').style.display = 'none';
+                loadUserProfileUI();
+                openAdminModal();
                 return;
             }
 
-            users.push({ username, fullName, role, password });
-            renderUsersTable();
-            document.getElementById("createUserForm").reset();
-            alert(`${fullName} hesabı başarıyla oluşturuldu!`);
-        });
-
-        function renderUsersTable() {
-            const tbody = document.getElementById("userTableBody");
-            tbody.innerHTML = "";
-            users.forEach(u => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td class="p-2 font-medium">${u.fullName}</td>
-                    <td class="p-2 text-slate-500">${u.username}</td>
-                    <td class="p-2"><span class="bg-slate-100 border px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">${u.role}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // 5. BLOG GÖNDERİSİ EKLEME & LİSTELEME
-        document.getElementById("blogForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const title = document.getElementById("blogTitle").value.trim();
-            const content = document.getElementById("blogContent").value.trim();
-
-            blogPosts.unshift({
-                author: currentUser.fullName,
-                role: currentUser.role,
-                title,
-                content,
-                date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            });
-
-            document.getElementById("blogForm").reset();
-            renderBlog();
-        });
-
-        function renderBlog() {
-            const container = document.getElementById("blogContainer");
-            const emptyMsg = document.getElementById("emptyBlogMsg");
-
-            if (blogPosts.length === 0) {
-                emptyMsg.classList.remove("hidden");
-                return;
+            if (usersData[u] && usersData[u].password === p) {
+                activeUserKey = u;
+                localStorage.setItem('mgp_active_user_key', u);
+                document.getElementById('auth-modal').style.display = 'none';
+                loadUserProfileUI();
+            } else {
+                alert("Kullanıcı adı veya şifre hatalı!");
             }
-
-            emptyMsg.classList.add("hidden");
-            container.innerHTML = "";
-
-            blogPosts.forEach(post => {
-                const article = document.createElement("article");
-                article.className = "bg-white p-5 rounded-xl shadow-sm border border-slate-200";
-                article.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-purple-600">${post.author} (${post.role.toUpperCase()})</span>
-                        <span class="text-xs text-slate-400">${post.date}</span>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900">${post.title}</h3>
-                    <p class="text-slate-600 text-xs mt-2 leading-relaxed">${post.content}</p>
-                `;
-                container.appendChild(article);
-            });
         }
 
-        // 6. SOHBET MESAJI GÖNDERME
-        document.getElementById("chatForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const input = document.getElementById("chatInput");
-            const text = input.value.trim();
-            if (!text) return;
+        function handleRegister() {
+            const name = document.getElementById('reg-name').value.trim();
+            const cls = document.getElementById('reg-class').value.trim();
+            const u = document.getElementById('reg-username').value.trim();
+            const p = document.getElementById('reg-password').value.trim();
+            const q = document.getElementById('reg-sec-q').value.trim();
+            const a = document.getElementById('reg-sec-a').value.trim();
 
-            chatMessages.push({
-                sender: currentUser.fullName,
-                role: currentUser.role,
-                text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            });
+            if(!name || !u || !p) { alert("Lütfen gerekli alanları doldurun!"); return; }
+            if(usersData[u] || u === 'admin') { alert("Bu kullanıcı adı zaten dolu!"); return; }
 
-            input.value = "";
-            renderChat();
-        });
+            usersData[u] = {
+                name: name,
+                class: cls || "7/A",
+                password: p,
+                secQ: q || "En sevdiğin ders?",
+                secA: a || "Matematik",
+                photo: ""
+            };
 
-        function renderChat() {
-            const box = document.getElementById("chatMessages");
-            box.innerHTML = '<div class="text-center text-xs text-slate-400 my-2">-- Sohbet Odası Açıldı --</div>';
-
-            chatMessages.forEach(msg => {
-                const div = document.createElement("div");
-                div.className = "bg-white p-2.5 rounded-lg border text-xs shadow-sm max-w-[80%]";
-                div.innerHTML = `
-                    <div class="flex justify-between items-center gap-2 mb-1">
-                        <strong class="text-purple-700">${msg.sender} <span class="text-[10px] text-slate-400">(${msg.role})</span></strong>
-                        <span class="text-[10px] text-slate-400">${msg.time}</span>
-                    </div>
-                    <p class="text-slate-800">${msg.text}</p>
-                `;
-                box.appendChild(div);
-            });
-            box.scrollTop = box.scrollHeight;
+            localStorage.setItem('mgp_users_data', JSON.stringify(usersData));
+            alert("Kayıt başarılı! Giriş yapabilirsiniz.");
+            showAuthTab('login');
         }
 
-        // 7. AI FOTOĞRAF ÖNİZLEME VE ANALİZ
-        document.getElementById("aiImageInput").addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.getElementById("imagePreview").src = evt.target.result;
-                    document.getElementById("imagePreviewContainer").classList.remove("hidden");
-                };
-                reader.readAsDataURL(file);
+        let forgotTargetUser = "";
+        function checkForgotUser() {
+            const u = document.getElementById('forgot-username').value.trim();
+            if(usersData[u]) {
+                forgotTargetUser = u;
+                document.getElementById('forgot-sec-q-text').innerText = "Güvenlik Sorusunuz: " + usersData[u].secQ;
+                document.getElementById('forgot-sec-area').style.display = 'flex';
+            } else {
+                alert("Kullanıcı bulunamadı!");
             }
-        });
+        }
 
-        document.getElementById("aiForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const subject = document.getElementById("aiSubject").value;
-            const notes = document.getElementById("aiNotes").value;
-            const hasFile = document.getElementById("aiImageInput").files.length > 0;
+        function handleResetPassword() {
+            const ans = document.getElementById('forgot-sec-a-input').value.trim();
+            const newP = document.getElementById('forgot-new-pass').value.trim();
 
-            document.getElementById("aiOutputPlaceholder").classList.add("hidden");
-            document.getElementById("aiOutputResult").classList.remove("hidden");
+            if(usersData[forgotTargetUser] && usersData[forgotTargetUser].secA.toLowerCase() === ans.toLowerCase()) {
+                usersData[forgotTargetUser].password = newP;
+                localStorage.setItem('mgp_users_data', JSON.stringify(usersData));
+                alert("Şifreniz başarıyla sıfırlandı! Yeni şifrenizle giriş yapabilirsiniz.");
+                showAuthTab('login');
+            } else {
+                alert("Güvenlik cevabı yanlış!");
+            }
+        }
 
-            document.getElementById("aiOcrText").innerText = hasFile 
-                ? `Fotoğraf başarıyla tarandı. [${subject}] dersine ait görsel metin içeriği okundu.` 
-                : `Görsel yüklenmedi, sadece metin tabanlı [${subject}] analizi yapılıyor.`;
-
-            const stepsList = document.getElementById("aiStepsList");
-            stepsList.innerHTML = `
-                <li><strong>Görsel Analiz:</strong> Sorudaki temel formüller ve veriler ayıklandı.</li>
-                <li><strong>Özel İpucu:</strong> ${notes ? `"${notes}" notunuza göre çözüm adımı yapılandırıldı.` : "Soru çözüm adımları sıralandı."}</li>
-                <li><strong>Önerilen Konu:</strong> Eksik kalan kısımlar için ${subject} konu tekrar testi çözülmesi tavsiye edilir.</li>
-            `;
-        });
-
-        // 8. ÇIKIŞ YAPMA
         function logout() {
-            currentUser = null;
-            document.getElementById("appScreen").classList.add("hidden");
-            document.getElementById("loginScreen").classList.remove("hidden");
-            document.getElementById("loginForm").reset();
+            localStorage.removeItem('mgp_active_user_key');
+            location.reload();
+        }
+
+        // Profil UI
+        function loadUserProfileUI() {
+            if(activeUserKey === 'admin') {
+                document.getElementById('sidebar-user-name').innerText = "Okul Yöneticisi";
+                document.getElementById('sidebar-user-class').innerText = "Admin Yetkisi";
+                document.getElementById('sidebar-user-avatar').src = "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
+                document.getElementById('btn-admin-panel').style.display = 'flex';
+            } else {
+                const uData = usersData[activeUserKey] || { name: "Öğrenci", class: "7/A", photo: "" };
+                document.getElementById('sidebar-user-name').innerText = uData.name;
+                document.getElementById('sidebar-user-class').innerText = uData.class + " Sınıfı";
+                document.getElementById('sidebar-user-avatar').src = uData.photo || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + activeUserKey;
+                document.getElementById('prof-fullname').value = uData.name;
+                document.getElementById('prof-class').value = uData.class;
+                document.getElementById('profile-preview-img').src = uData.photo || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + activeUserKey;
+                document.getElementById('btn-admin-panel').style.display = 'none';
+            }
+        }
+
+        // Fotoğraf Yükleme
+        function handlePhotoUpload(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Img = evt.target.result;
+                document.getElementById('profile-preview-img').src = base64Img;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProfileSettings() {
+            if(activeUserKey === 'admin') { closeProfileModal(); return; }
+            const newName = document.getElementById('prof-fullname').value.trim();
+            const newCls = document.getElementById('prof-class').value.trim();
+            const newPhoto = document.getElementById('profile-preview-img').src;
+
+            usersData[activeUserKey].name = newName;
+            usersData[activeUserKey].class = newCls;
+            usersData[activeUserKey].photo = newPhoto;
+
+            localStorage.setItem('mgp_users_data', JSON.stringify(usersData));
+            loadUserProfileUI();
+            closeProfileModal();
+            resetSystemPrompt();
+            alert("Profil ayarlarınız güncellendi!");
+        }
+
+        // Admin Modal
+        function openAdminModal() { renderAdminLists(); document.getElementById('admin-modal').style.display = 'flex'; }
+        function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
+
+        function switchAdminTab(tab) {
+            document.querySelectorAll('#admin-modal .tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#admin-modal .tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('admin-tab-' + tab).classList.add('active');
+        }
+
+        function postAnnouncement() {
+            const title = document.getElementById('admin-ann-title').value.trim();
+            const body = document.getElementById('admin-ann-body').value.trim();
+            if(!title || !body) return;
+            announcements.unshift({ id: Date.now(), title, body });
+            localStorage.setItem('mgp_announcements', JSON.stringify(announcements));
+            document.getElementById('admin-ann-title').value = '';
+            document.getElementById('admin-ann-body').value = '';
+            renderAdminLists();
+            checkAnnouncements();
+            alert("Duyuru yayınlandı!");
+        }
+
+        function deleteAnn(id) {
+            announcements = announcements.filter(a => a.id !== id);
+            localStorage.setItem('mgp_announcements', JSON.stringify(announcements));
+            renderAdminLists();
+            checkAnnouncements();
+        }
+
+        function renderAdminLists() {
+            const annListDiv = document.getElementById('admin-ann-list');
+            annListDiv.innerHTML = announcements.map(a => `
+                <div style="background:var(--bg-card); padding:8px; border-radius:8px; font-size:12px; display:flex; justify-content:space-between;">
+                    <span><b>${a.title}:</b> ${a.body}</span>
+                    <button onclick="deleteAnn(${a.id})" style="color:var(--accent-rose); background:none; border:none; cursor:pointer;">Sil</button>
+                </div>
+            `).join('') || '<p style="font-size:12px; color:var(--text-sub);">Henüz duyuru yok.</p>';
+
+            const stListDiv = document.getElementById('admin-students-list');
+            stListDiv.innerHTML = Object.keys(usersData).map(k => `
+                <div style="background:var(--bg-card); padding:10px; border-radius:10px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
+                    <div><b>${usersData[k].name}</b> (${usersData[k].class})<br><span style="color:var(--text-sub);">Kullanıcı: ${k} | Şifre: ${usersData[k].password}</span></div>
+                    <button class="btn-primary" style="padding:4px 8px; font-size:11px;" onclick="adminResetUserPass('${k}')">Şifreyi 1234 Yap</button>
+                </div>
+            `).join('') || '<p style="font-size:12px; color:var(--text-sub);">Kayıtlı öğrenci yok.</p>';
+        }
+
+        function adminResetUserPass(k) {
+            usersData[k].password = '1234';
+            localStorage.setItem('mgp_users_data', JSON.stringify(usersData));
+            renderAdminLists();
+            alert(`${k} kullanıcısının şifresi '1234' yapıldı!`);
+        }
+
+        function saveAdminSchedule() {
+            adminSchedule = {
+                mon: document.getElementById('adm-sch-mon').value,
+                tue: document.getElementById('adm-sch-tue').value,
+                wed: document.getElementById('adm-sch-wed').value,
+                thu: document.getElementById('adm-sch-thu').value,
+                fri: document.getElementById('adm-sch-fri').value,
+            };
+            localStorage.setItem('mgp_admin_schedule', JSON.stringify(adminSchedule));
+            alert("Okul genel ders programı güncellendi!");
+        }
+
+        function checkAnnouncements() {
+            if(announcements.length > 0) {
+                document.getElementById('banner-text').innerText = `${announcements[0].title} - ${announcements[0].body}`;
+                document.getElementById('announcement-banner').style.display = 'flex';
+            } else {
+                document.getElementById('announcement-banner').style.display = 'none';
+            }
+        }
+
+        // Sınav & Not Araçları Modal
+        function openGradeToolsModal() { document.getElementById('grade-tools-modal').style.display = 'flex'; }
+        function closeGradeToolsModal() { document.getElementById('grade-tools-modal').style.display = 'none'; }
+
+        function switchGradeTab(tab) {
+            document.querySelectorAll('#grade-tools-modal .tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#grade-tools-modal .tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('grade-tab-' + tab).classList.add('active');
+        }
+
+        function calcTRGrade() {
+            const w = parseFloat(document.getElementById('tr-written').value) || 0;
+            const l = parseFloat(document.getElementById('tr-listen').value) || 0;
+            const s = parseFloat(document.getElementById('tr-speak').value) || 0;
+            const avg = (w * 0.5) + (l * 0.25) + (s * 0.25);
+            const res = document.getElementById('tr-res');
+            res.style.display = 'block';
+            res.innerText = `MEB Türkçe Sınav Ortalamanız: ${avg.toFixed(2)} / 100`;
+        }
+
+        function calcIOKBS() {
+            const tr = parseFloat(document.getElementById('iokbs-tr').value) || 0;
+            const mat = parseFloat(document.getElementById('iokbs-mat').value) || 0;
+            const fen = parseFloat(document.getElementById('iokbs-fen').value) || 0;
+            const sos = parseFloat(document.getElementById('iokbs-sos').value) || 0;
+            const totalNet = tr + mat + fen + sos;
+            const score = 300 + (totalNet * 1.95);
+            const res = document.getElementById('iokbs-res');
+            res.style.display = 'block';
+            res.innerHTML = `Toplam Net: <b>${totalNet.toFixed(2)}</b> | Tahmini Bursluluk Puanı: <b>${score.toFixed(2)}</b>`;
+        }
+
+        function calcLGS() {
+            const tr = parseFloat(document.getElementById('lgs-tr').value) || 0;
+            const mat = parseFloat(document.getElementById('lgs-mat').value) || 0;
+            const fen = parseFloat(document.getElementById('lgs-fen').value) || 0;
+            const ink = parseFloat(document.getElementById('lgs-ink').value) || 0;
+            const din = parseFloat(document.getElementById('lgs-din').value) || 0;
+            const ing = parseFloat(document.getElementById('lgs-ing').value) || 0;
+            
+            const totalNet = tr + mat + fen + ink + din + ing;
+            const estScore = 200 + (tr * 4.3) + (mat * 4.2) + (fen * 4.1) + (ink * 1.6) + (din * 1.8) + (ing * 1.5);
+            const res = document.getElementById('lgs-res');
+            res.style.display = 'block';
+            res.innerHTML = `Toplam LGS Neti: <b>${totalNet.toFixed(2)}</b> | Tahmini LGS Puanı: <b>${estScore.toFixed(2)}</b>`;
+        }
+
+        function analyzeEOkul() {
+            const txt = document.getElementById('eokul-text').value;
+            if(!txt) return;
+            closeGradeToolsModal();
+            quickPrompt(`e-Okul notlarım şöyle:\n"${txt}"\nLütfen ders ders performansımı değerlendir ve zayıf derslerimi düzeltmem için çalışma takvimi çıkar.`);
+        }
+
+        // Profil Modal
+        function openProfileModal() { document.getElementById('profile-modal').style.display = 'flex'; }
+        function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
+
+        // AI Sistem Prompt
+        function resetSystemPrompt() {
+            const currUser = usersData[activeUserKey] || { name: "Öğrenci", class: "7/A" };
+            const sys = `Sen Muzafferda Güzide Pulur İmam Hatip Ortaokulu (MGP İHO) öğrencileri için geliştirilmiş akıllı ders ve okul asistanısın.
+Öğrenci Bilgisi:
+- Ad Soyad: ${currUser.name}
+- Sınıfı: ${currUser.class}
+- Haftalık Ders Takvimi: Pazartesi: ${adminSchedule.mon}, Salı: ${adminSchedule.tue}, Çarşamba: ${adminSchedule.wed}, Perşembe: ${adminSchedule.thu}, Cuma: ${adminSchedule.fri}
+
+Görevin öğrencilerin sorularına samimi, profesör seviyesinde doğru, adımlı ve motive edici Türkçe yanıtlar vermektir.`;
+            chatHistory = [{ role: 'system', content: sys }];
+        }
+
+        function quickPrompt(txt) {
+            document.getElementById('user-input').value = txt;
+            sendMessage();
+        }
+
+        // Mesajlaşma & Daktilo Animasyonu
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const text = inputField.value.trim();
+            if(!text) return;
+
+            appendUserMessage(text);
+            inputField.value = '';
+
+            chatHistory.push({ role: 'user', content: text });
+
+            const chatBox = document.getElementById('chat-box');
+            const aiRow = document.createElement('div');
+            aiRow.className = 'message-row';
+            aiRow.innerHTML = `
+                <div class="msg-avatar ai-avatar-bg">🏫</div>
+                <div class="message-content ai-msg typing-cursor">MGP İHO AI yazıyor...</div>
+            `;
+            chatBox.appendChild(aiRow);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            let reply = "";
+            try {
+                const response = await fetch('https://text.pollinations.ai/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: chatHistory, model: 'openai' })
+                });
+                reply = await response.text();
+            } catch(e) {
+                reply = "Bağlantıda bir aksama oldu. Lütfen tekrar deneyin.";
+            }
+
+            const msgContent = aiRow.querySelector('.message-content');
+            chatHistory.push({ role: 'assistant', content: reply });
+            
+            // Daktilo Animasyonlu Yazım
+            typeWriterEffect(msgContent, reply, () => {
+                speakText(reply);
+            });
+        }
+
+        function typeWriterEffect(element, text, callback) {
+            element.innerHTML = '';
+            element.classList.add('typing-cursor');
+            let i = 0;
+            const speed = 12; // karakter yazma hızı (ms)
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML = text.substring(0, i + 1).replace(/\n/g, '<br>');
+                    i++;
+                    const chatBox = document.getElementById('chat-box');
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.remove('typing-cursor');
+                    if(callback) callback();
+                }
+            }
+            type();
+        }
+
+        function appendUserMessage(text) {
+            const chatBox = document.getElementById('chat-box');
+            const userRow = document.createElement('div');
+            userRow.className = 'message-row user-row';
+            const uData = usersData[activeUserKey] || {};
+            const avatarSrc = uData.photo || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + activeUserKey;
+            
+            userRow.innerHTML = `
+                <div class="message-content user-msg">${text}</div>
+                <img src="${avatarSrc}" class="msg-avatar">
+            `;
+            chatBox.appendChild(userRow);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function clearChat() {
+            document.getElementById('chat-box').innerHTML = '';
+            resetSystemPrompt();
+        }
+
+        // Seslendirme
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const cleanText = text.replace(/<[^>]*>?/gm, '');
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'tr-TR';
+                utterance.pitch = parseFloat(document.getElementById('voice-pitch').value || 1.0);
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function initSpeech() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'tr-TR';
+                recognition.onresult = function(e) {
+                    document.getElementById('user-input').value = e.results[0][0].transcript;
+                    toggleSpeech();
+                };
+                recognition.onerror = function() { toggleSpeech(); };
+            }
+        }
+
+        function toggleSpeech() {
+            if(!recognition) return;
+            const micBtn = document.getElementById('mic-btn');
+            if(isListening) {
+                recognition.stop();
+                isListening = false;
+                micBtn.classList.remove('mic-active');
+            } else {
+                recognition.start();
+                isListening = true;
+                micBtn.classList.add('mic-active');
+            }
         }
     </script>
 </body>
