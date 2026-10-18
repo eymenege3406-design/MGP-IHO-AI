@@ -4,236 +4,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MGP İHO AI | Akıllı Okul Asistanı</title>
+<title>MGP İHO AI | Özel Bir Okul</title>
 <style>
-:root{--bg:#080d19;--side:#101827;--card:#192438;--hover:#26354c;--text:#f8fafc;--muted:#a6b4c8;--cyan:#22d3ee;--purple:#818cf8;--green:#34d399;--red:#fb7185}
-*{box-sizing:border-box;font-family:Inter,"Segoe UI",Arial,sans-serif}
-body{margin:0;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
-button,input,textarea,select{font:inherit}
+:root{--bg:#080d19;--side:#101827;--card:#192438;--hover:#293951;--text:#f8fafc;--muted:#a7b5c9;--cyan:#22d3ee;--purple:#818cf8;--green:#34d399;--border:#ffffff18}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif;min-height:100vh}
+body.light{--bg:#eef2ff;--side:#fff;--card:#e0e7f3;--hover:#cbd5e1;--text:#111827;--muted:#536174;--border:#00000018}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 button:disabled{opacity:.5;cursor:not-allowed}
-.layout{display:flex;height:100vh}
-.sidebar{width:255px;flex-shrink:0;background:var(--side);padding:18px;display:flex;flex-direction:column;gap:16px;border-right:1px solid #ffffff12}
-.brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #ffffff16}
-.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#06b6d4,#6366f1);font-size:25px}
-.brand h2{font-size:17px;margin:0}.brand small{color:var(--cyan)}
-.btn{border:1px solid #ffffff12;border-radius:11px;padding:11px 13px;background:var(--card);color:var(--text);font-weight:650;transition:.2s}
-.btn:hover{background:var(--hover);transform:translateY(-1px)}
-.primary{background:linear-gradient(135deg,#0891b2,#6366f1)!important;border:0!important;color:white!important}
-.danger{color:#fecdd3!important;background:#881337!important}
-.menu{display:grid;gap:7px;overflow:auto}
-.menu .btn{text-align:left;font-size:13px}
-.profile{margin-top:auto;display:flex;gap:10px;align-items:center;padding:12px;background:var(--card);border-radius:14px}
-.avatar{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#164e63;font-size:19px}
-.profile-info{flex:1;min-width:0}.profile-info strong,.profile-info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.profile-info small{color:var(--muted);margin-top:3px}
-.main{min-width:0;flex:1;display:flex;flex-direction:column}
-header{height:68px;flex-shrink:0;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--side);border-bottom:1px solid #ffffff12}
+button,.btn{border:1px solid var(--border);border-radius:11px;padding:10px 13px;background:var(--card);color:var(--text);font-weight:650}
+button:hover{filter:brightness(1.12)}
+.primary{background:linear-gradient(135deg,#0891b2,#6366f1)!important;color:#fff!important;border:0!important}
+.danger{background:#881337!important;color:#fff!important}
+.muted{color:var(--muted);font-size:12px;line-height:1.6}
+.layout{min-height:100vh;display:flex}
+.sidebar{width:250px;background:var(--side);border-right:1px solid var(--border);padding:17px;display:flex;flex-direction:column;gap:15px;flex-shrink:0}
+.brand{display:flex;gap:11px;align-items:center;padding-bottom:17px;border-bottom:1px solid var(--border)}
+.logo{height:48px;width:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#06b6d4,#6366f1);font-size:25px;flex-shrink:0}
+.brand h2{font-size:16px;margin:0 0 4px}.brand small{color:var(--cyan);font-size:11px}
+.slogan{font-size:12px;line-height:1.6;color:var(--muted);padding:12px;background:var(--card);border-radius:12px}
+.slogan b{color:var(--cyan)}
+.nav{display:grid;gap:7px}
+.nav button{text-align:left;font-size:13px}
+.userbox{margin-top:auto;padding:12px;background:var(--card);border-radius:13px;overflow-wrap:anywhere}
+.userbox b{display:block;margin-bottom:4px}
+.main{flex:1;min-width:0}
+header{position:sticky;top:0;z-index:3;min-height:66px;background:var(--side);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 22px}
 header strong{font-size:14px}
-.status{color:var(--green);font-size:12px}
-#announcement{display:none;padding:10px 18px;background:#312e81;font-size:13px}
-#chat{flex:1;overflow-y:auto;padding:24px max(16px,calc((100% - 850px)/2));display:flex;flex-direction:column;gap:18px;scroll-behavior:smooth}
-.msg{display:flex;gap:10px;align-items:flex-start;max-width:100%}
-.msg.user{justify-content:flex-end}
-.bubble{max-width:85%;padding:14px 16px;border-radius:17px;background:var(--card);line-height:1.7;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
-.user .bubble{background:linear-gradient(135deg,#4338ca,#6366f1);border-top-right-radius:4px}
-.bot .bubble{border:1px solid #ffffff12;border-top-left-radius:4px}
-.msg-icon{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#164e63;flex-shrink:0}
-.composer{padding:12px max(16px,calc((100% - 850px)/2)) 20px;background:var(--bg)}
-.input-row{display:flex;align-items:center;gap:8px;padding:7px 10px 7px 16px;background:var(--side);border:1px solid #ffffff24;border-radius:18px}
-.input-row:focus-within{border-color:var(--cyan)}
-.input-row input{min-width:0;flex:1;background:transparent;color:var(--text);border:0;outline:0;padding:10px 0}
-.hint{font-size:11px;color:var(--muted);text-align:center;margin:8px 0 0}
-.modal{display:none;position:fixed;inset:0;z-index:20;background:#020617dd;backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:14px}
-.panel{width:min(900px,100%);max-height:92vh;overflow-y:auto;background:var(--side);border:1px solid #ffffff20;border-radius:20px;padding:20px;box-shadow:0 25px 80px #0008}
-.panel h2{margin:0 0 8px;color:var(--cyan);font-size:22px}
-.panel h3{margin:0 0 12px}
-.panel p{color:var(--muted);line-height:1.55}
-.panel label{font-size:12px;color:var(--muted);display:block;margin:9px 0 4px}
-.panel input,.panel textarea,.panel select,.field{width:100%;padding:11px;border-radius:10px;border:1px solid #ffffff20;background:var(--bg);color:var(--text);margin:4px 0 9px}
-.panel textarea{resize:vertical;min-height:80px}
-.panel input[type=checkbox],.panel input[type=range]{width:auto}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}
-.tabpage{display:none}.tabpage.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.card{background:var(--card);border:1px solid #ffffff10;border-radius:14px;padding:15px;margin:8px 0;min-width:0}
-.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.content{max-width:1100px;margin:auto;padding:24px}
+.hero{padding:26px;border:1px solid var(--border);border-radius:22px;background:linear-gradient(135deg,#0e7490,#3730a3);margin-bottom:22px}
+.hero h1{font-size:clamp(24px,4vw,39px);margin:0 0 10px}
+.hero p{line-height:1.7;margin:0;color:#e0f2fe}
+.hero .slogan-big{font-size:17px;font-weight:800;margin-top:16px;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px;margin-bottom:12px;min-width:0}
+.card h3{margin:0 0 12px;font-size:16px}
+.card p{line-height:1.6}
+.stat{font-size:28px;color:var(--cyan);font-weight:850;margin:7px 0}
+.field{display:block;width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px;margin:6px 0 13px}
+label{display:block;font-size:12px;color:var(--muted);margin-top:10px}
+textarea.field{resize:vertical;min-height:90px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .row>*{min-width:0}
-.stat{font-size:27px;font-weight:850;color:var(--cyan)}
-.muted{font-size:12px;color:var(--muted)}
-.item{padding:11px;border-radius:10px;background:var(--bg);margin:8px 0;overflow-wrap:anywhere}
-.item .btn{padding:7px 10px;font-size:12px}
-.close{float:right}
-#toast{position:fixed;z-index:50;bottom:22px;left:50%;transform:translateX(-50%);background:#164e63;color:white;border-radius:12px;padding:12px 18px;display:none;max-width:90%;text-align:center}
-#auth{z-index:40}
-#auth .panel{width:min(390px,100%)}
-.mobile-menu{display:none}
-body.light{--bg:#eef2ff;--side:#fff;--card:#e2e8f0;--hover:#cbd5e1;--text:#0f172a;--muted:#475569}
+.page{display:none}.page.active{display:block}
+#messages{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.message{padding:13px 15px;border-radius:14px;background:var(--bg);border:1px solid var(--border);white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}
+.message.me{background:#3730a3;color:white;margin-left:10%}
+.message.ai{margin-right:10%}
+.chat-input{display:flex;gap:8px}
+.chat-input input{flex:1;min-width:0}
+.item{padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:11px;margin:8px 0;overflow-wrap:anywhere}
+.item p{white-space:pre-wrap}
+.badge{display:inline-block;padding:5px 8px;border-radius:8px;background:#164e63;color:#cffafe;font-size:11px}
+.modal{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding:16px;background:#020617df;backdrop-filter:blur(7px)}
+.modal.open{display:flex}
+.modal-panel{width:min(430px,100%);max-height:92vh;overflow:auto;padding:23px;border-radius:20px;background:var(--side);border:1px solid var(--border)}
+.modal-panel h2{margin:0 0 8px;color:var(--cyan)}
+.login-logo{display:grid;place-items:center;margin:0 auto 12px;width:65px;height:65px;border-radius:20px;background:linear-gradient(135deg,#06b6d4,#6366f1);font-size:32px}
+#toast{display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:30;max-width:90%;background:#164e63;color:white;padding:12px 18px;border-radius:12px}
+hr{border:0;border-top:1px solid var(--border);margin:17px 0}
 @media(max-width:760px){
- .sidebar{width:70px;padding:10px;align-items:center}
- .brand{border:0;padding:0}.brand-info,.menu-label,.profile-info,.profile .settings{display:none}
- .menu{width:100%}.menu .btn{font-size:0;text-align:center;padding:12px 4px}.menu .btn::first-letter{font-size:17px}
- .sidebar>.btn{font-size:11px;padding:8px 2px;width:100%}
- .profile{padding:7px;margin-top:auto}.avatar{width:34px;height:34px}
- header{padding:0 12px}header strong{font-size:12px}
- #chat{padding:15px 10px}.composer{padding:10px}
- .bubble{max-width:90%;font-size:13px;padding:12px}
- .panel{padding:14px}
+ .layout{display:block}.sidebar{width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--border)}
+ .brand{padding-bottom:10px}.slogan{display:none}.nav{display:flex;overflow-x:auto;padding-bottom:3px}.nav button{white-space:nowrap;text-align:center;font-size:12px;padding:9px}
+ .userbox{margin-top:0}.content{padding:14px}header{padding:12px}
+ .hero{padding:20px}.message.me{margin-left:3%}.message.ai{margin-right:3%}
 }
 </style>
 </head>
 <body>
-<div class="layout">
-<aside class="sidebar">
- <div class="brand"><div class="logo">🏫</div><div class="brand-info"><h2>MGP İHO AI</h2><small>Akıllı Okul Asistanı</small></div></div>
- <button class="btn primary" onclick="newChat()">＋ Yeni Sohbet</button>
- <nav class="menu">
-  <button class="btn" onclick="openTool('study')">🧠 Ders Merkezi</button>
-  <button class="btn" onclick="openTool('quiz')">📝 Mini Test</button>
-  <button class="btn" onclick="openTool('cards')">🗂️ Tekrar Kartları</button>
-  <button class="btn" onclick="openTool('tasks')">🎯 Günlük Görevler</button>
-  <button class="btn" onclick="openTool('notes')">📒 Not Defteri</button>
-  <button class="btn" onclick="openTool('focus')">⏱️ Odaklanma</button>
-  <button class="btn" onclick="openGrades()">📊 Not Hesaplama</button>
-  <button class="btn" onclick="showAnnouncements()">📢 Duyurular</button>
-  <button class="btn" onclick="openTool('tools')">⚙️ Diğer Araçlar</button>
-  <button class="btn" id="adminMenu" style="display:none" onclick="openAdmin()">👑 Yönetim</button>
- </nav>
- <div class="profile"><div class="avatar">🎓</div><div class="profile-info"><strong id="userName">Öğrenci</strong><small id="userClass">MGP İHO</small></div><button class="btn settings" onclick="openProfile()" title="Profil">⚙️</button></div>
- <button class="btn" onclick="logout()">Çıkış Yap</button>
-</aside>
-<main class="main">
- <header><strong>✨ Muzafferda Güzide Pulur İHO Özel Yapay Zekâsı</strong><span class="status">● SOHBET</span></header>
- <div id="announcement"></div>
- <section id="chat">
-  <div class="msg bot"><div class="msg-icon">🏫</div><div class="bubble">Merhaba! Ben MGP İHO AI. 👋
 
-Derslerinde, ödevlerinde, sınavlarında ve çalışma planında sana yardımcı olabilirim.
-
-Sol menüden Ders Merkezi, Mini Test, Not Defteri ve diğer araçları açabilirsin.</div></div>
- </section>
- <div class="composer">
-  <div class="input-row"><input id="message" placeholder="Bir soru sor..." autocomplete="off"><button class="btn" onclick="toggleVoice()" title="Sesle yaz">🎙️</button><button class="btn primary" onclick="sendMessage()">➤</button></div>
-  <div class="hint">Yanıtlar yapay zekâ tarafından oluşturulur; önemli bilgileri kontrol et.</div>
+<!-- GİRİŞ EKRANI -->
+<div class="modal open" id="loginModal">
+ <div class="modal-panel">
+  <div class="login-logo">🏫</div>
+  <h2 style="text-align:center">MGP İHO AI</h2>
+  <p style="text-align:center;font-weight:800">Özel Okul değil, Özel Bir Okul.</p>
+  <p class="muted" style="text-align:center">Okulunun akıllı asistanına hoş geldin.</p>
+  <form id="loginForm">
+   <label>Numara</label>
+   <input class="field" id="loginNumber" inputmode="numeric" placeholder="Kullanıcı numaran" required>
+   <label>Giriş kodu</label>
+   <input class="field" id="loginCode" type="password" placeholder="Giriş kodun" required>
+   <button class="primary" style="width:100%;margin-top:5px" type="submit">Giriş Yap →</button>
+  </form>
+  <p class="muted">Hesabın yoksa okul yöneticisinden hesap oluşturmasını iste.</p>
+  <p class="muted">Demo yönetici: numara <b>111</b>, kod <b>admin</b>.</p>
  </div>
-</main>
 </div>
 
-<div class="modal" id="auth">
- <div class="panel">
-  <div style="text-align:center"><div class="logo" style="margin:auto auto 12px">🏫</div><h2 id="authTitle">MGP İHO AI</h2><p>Akıllı Okul Asistanı</p></div>
-  <div id="loginForm">
-   <label>Kullanıcı adı</label><input id="loginUser" autocomplete="username" placeholder="Kullanıcı adı">
-   <label>Şifre</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Şifre">
-   <button class="btn primary" style="width:100%" onclick="login()">Giriş Yap</button>
-   <p><button class="btn" onclick="showRegister()">Yeni hesap oluştur</button></p>
+<div class="layout" id="app" style="display:none">
+ <aside class="sidebar">
+  <div class="brand">
+   <div class="logo" id="smallLogo">🏫</div>
+   <div><h2>MGP İHO AI</h2><small>Akıllı Okul Asistanı</small></div>
   </div>
-  <div id="registerForm" style="display:none">
-   <label>Ad Soyad</label><input id="regName" placeholder="Ad Soyad">
-   <label>Sınıf / Şube</label><input id="regClass" placeholder="7/A">
-   <label>Kullanıcı adı</label><input id="regUser" autocomplete="username">
-   <label>Şifre</label><input id="regPass" type="password" autocomplete="new-password">
-   <button class="btn primary" style="width:100%" onclick="register()">Kayıt Ol</button>
-   <button class="btn" style="margin-top:8px" onclick="showLogin()">Girişe dön</button>
+  <div class="slogan"><b>Özel Okul değil, Özel Bir Okul.</b><br>Birlikte öğrenir, birlikte gelişiriz.</div>
+  <nav class="nav" id="nav">
+   <button onclick="showPage('home')">🏠 Ana Sayfa</button>
+   <button onclick="showPage('ai')">🤖 Yapay Zekâ</button>
+   <button onclick="showPage('study')">📚 Ders Merkezi</button>
+   <button onclick="showPage('tasks')">🎯 Görevler</button>
+   <button onclick="showPage('notes')">📒 Notlarım</button>
+   <button onclick="showPage('focus')">⏱️ Odaklan</button>
+   <button onclick="showPage('school')">📢 Okul Duyuruları</button>
+   <button id="teacherNav" style="display:none" onclick="showPage('teacher')">🧑‍🏫 Öğretmen Paneli</button>
+   <button id="adminNav" style="display:none" onclick="showPage('admin')">👑 Yönetim Paneli</button>
+   <button onclick="toggleTheme()">🌗 Tema Değiştir</button>
+  </nav>
+  <div class="userbox">
+   <b id="sideName">Öğrenci</b>
+   <span class="muted" id="sideDetails"></span>
+   <button class="danger" style="width:100%;margin-top:12px" onclick="logout()">Çıkış Yap</button>
   </div>
-  <p class="muted">Demo sürümünde hesap bilgileri bu tarayıcıda saklanır. Gerçek okul hesapları için güvenli sunucu gerekir.</p>
- </div>
-</div>
+ </aside>
 
-<div class="modal" id="toolsModal">
- <div class="panel">
-  <button class="btn close" onclick="closeModal('toolsModal')">Kapat ✕</button>
-  <h2>🚀 Öğrenci Merkezi</h2><p>Ders çalış, ilerlemeni takip et ve araçlarını kullan.</p>
-  <div class="tabs" id="toolTabs">
-   <button class="btn primary" data-tab="home">🏠 Genel Bakış</button>
-   <button class="btn" data-tab="study">🧠 Ders</button>
-   <button class="btn" data-tab="quiz">📝 Test</button>
-   <button class="btn" data-tab="cards">🗂️ Kartlar</button>
-   <button class="btn" data-tab="tasks">🎯 Görevler</button>
-   <button class="btn" data-tab="notes">📒 Notlar</button>
-   <button class="btn" data-tab="focus">⏱️ Sayaç</button>
-   <button class="btn" data-tab="tools">🛠️ Araçlar</button>
+ <main class="main">
+  <header>
+   <strong id="headerTitle">MGP İHO AI</strong>
+   <span class="badge" id="roleBadge">ÖĞRENCİ</span>
+  </header>
+  <div class="content">
+
+   <!-- ANA SAYFA -->
+   <section class="page active" id="page-home">
+    <div class="hero">
+     <h1>Geleceğin burada başlıyor. ✨</h1>
+     <p id="welcomeText">MGP İHO AI okul asistanına hoş geldin.</p>
+     <div class="slogan-big">“Özel Okul değil, Özel Bir Okul.”</div>
+    </div>
+    <div class="grid">
+     <div class="card"><h3>📒 Kişisel Notlar</h3><div class="stat" id="homeNotes">0</div><p class="muted">Kaydettiğin notlar</p></div>
+     <div class="card"><h3>🎯 Görevlerim</h3><div class="stat" id="homeTasks">0/0</div><p class="muted">Tamamlanan görevler</p></div>
+     <div class="card"><h3>🔥 Çalışma Serisi</h3><div class="stat" id="homeStreak">0 gün</div><button class="primary" onclick="markStudy()">Bugün çalıştım!</button></div>
+    </div>
+    <div class="card">
+     <h3>⚡ Hızlı Başlangıç</h3>
+     <div class="row">
+      <button class="primary" onclick="showPage('ai')">Yapay zekâya sor</button>
+      <button onclick="showPage('study')">Konu çalış</button>
+      <button onclick="showPage('tasks')">Görev ekle</button>
+      <button onclick="showPage('school')">Duyuruları gör</button>
+     </div>
+    </div>
+    <div class="card"><h3>💡 Günün Tavsiyesi</h3><p id="dailyTip">Her gün kısa tekrar yapmayı unutma!</p><button onclick="changeTip()">Yeni tavsiye</button></div>
+   </section>
+
+   <!-- YAPAY ZEKÂ -->
+   <section class="page" id="page-ai">
+    <div class="card">
+     <h3>🤖 MGP İHO AI Asistanı</h3>
+     <p class="muted">Sorunu yaz; konu anlatımı, örnekler ve ödev desteği iste.</p>
+     <div id="messages"><div class="message ai">Merhaba! 👋 Sana nasıl yardımcı olabilirim?</div></div>
+     <form id="chatForm" class="chat-input">
+      <input class="field" style="margin:0" id="chatInput" placeholder="Örn. Kesirleri anlat..." required>
+      <button class="primary" type="submit">Gönder</button>
+     </form>
+     <p class="muted">Yapay zekâ hizmeti internet ve erişilebilir bir API gerektirir.</p>
+    </div>
+   </section>
+
+   <!-- DERS MERKEZİ -->
+   <section class="page" id="page-study">
+    <div class="card">
+     <h3>📚 Ders Merkezi</h3>
+     <label>Sınıf</label>
+     <select class="field" id="studyGrade"><option>5. sınıf</option><option>6. sınıf</option><option selected>7. sınıf</option><option>8. sınıf</option></select>
+     <label>Ders</label>
+     <select class="field" id="studySubject"><option>Türkçe</option><option>Matematik</option><option>Fen Bilimleri</option><option>Sosyal Bilgiler</option><option>İngilizce</option><option>Din Kültürü</option><option>İnkılap Tarihi</option><option>Bilişim Teknolojileri</option></select>
+     <label>Konu</label><input class="field" id="studyTopic" placeholder="Örn. Hücre, oran-orantı">
+     <div class="row">
+      <button class="primary" onclick="studyRequest('anlat')">Konuyu anlat</button>
+      <button onclick="studyRequest('örnek')">Örnek çöz</button>
+      <button onclick="studyRequest('özet')">Özet çıkar</button>
+      <button onclick="studyRequest('plan')">Çalışma planı</button>
+      <button onclick="studyRequest('test')">Mini test hazırla</button>
+     </div>
+    </div>
+   </section>
+
+   <!-- GÖREVLER -->
+   <section class="page" id="page-tasks">
+    <div class="card"><h3>🎯 Görevlerim</h3>
+     <form id="taskForm" class="row"><input class="field" style="flex:1;margin:0" id="taskInput" placeholder="Örn. 20 matematik sorusu çöz" required><button class="primary">Görev ekle</button></form>
+     <div id="taskList"></div>
+    </div>
+   </section>
+
+   <!-- NOTLAR -->
+   <section class="page" id="page-notes">
+    <div class="card"><h3>📒 Kişisel Not Defterim</h3>
+     <form id="noteForm"><label>Not başlığı</label><input class="field" id="noteTitle" required><label>Not içeriği</label><textarea class="field" id="noteBody" required></textarea><button class="primary">Notu kaydet</button></form>
+     <div id="noteList"></div>
+    </div>
+   </section>
+
+   <!-- ODAKLANMA -->
+   <section class="page" id="page-focus">
+    <div class="card" style="text-align:center">
+     <h3>⏱️ Odaklanma Sayacı</h3><p class="muted">Çalışma süreni seç ve başla.</p>
+     <div class="stat" style="font-size:48px" id="timer">25:00</div>
+     <div class="row" style="justify-content:center">
+      <button onclick="setTimer(15)">15 dakika</button><button class="primary" onclick="setTimer(25)">25 dakika</button><button onclick="setTimer(45)">45 dakika</button>
+     </div>
+     <div class="row" style="justify-content:center;margin-top:12px"><button class="primary" onclick="startTimer()">Başlat</button><button onclick="pauseTimer()">Duraklat</button><button onclick="resetTimer()">Sıfırla</button></div>
+     <p id="timerMessage" class="muted"></p>
+    </div>
+   </section>
+
+   <!-- DUYURULAR -->
+   <section class="page" id="page-school">
+    <div class="card"><h3>📢 Okul Duyuruları</h3><div id="announcementList"></div></div>
+    <div class="card"><h3>📚 Ödevler ve Çalışmalar</h3><div id="homeworkList"></div></div>
+   </section>
+
+   <!-- ÖĞRETMEN PANELİ -->
+   <section class="page" id="page-teacher">
+    <div class="hero"><h1>🧑‍🏫 Öğretmen Paneli</h1><p>Duyuru yayımla ve öğrencilerine ödev oluştur.</p></div>
+    <div class="card"><h3>📢 Duyuru oluştur</h3>
+     <form id="announcementForm"><label>Başlık</label><input class="field" id="announcementTitle" required><label>Duyuru içeriği</label><textarea class="field" id="announcementBody" required></textarea><button class="primary">Duyuruyu yayımla</button></form>
+    </div>
+    <div class="card"><h3>📝 Ödev oluştur</h3>
+     <form id="homeworkForm"><label>Ders</label><input class="field" id="homeworkSubject" required><label>Ödev açıklaması</label><textarea class="field" id="homeworkBody" required></textarea><label>Son tarih</label><input class="field" id="homeworkDate" type="date"><button class="primary">Ödevi yayımla</button></form>
+    </div>
+   </section>
+
+   <!-- YÖNETİM PANELİ -->
+   <section class="page" id="page-admin">
+    <div class="hero"><h1>👑 Yönetim Paneli</h1><p>Öğrenci ve öğretmen hesaplarını yönet.</p></div>
+    <div class="grid">
+     <div class="card"><h3>👥 Toplam hesap</h3><div class="stat" id="accountCount">0</div></div>
+     <div class="card"><h3>🎓 Öğrenciler</h3><div class="stat" id="studentCount">0</div></div>
+     <div class="card"><h3>🧑‍🏫 Öğretmenler</h3><div class="stat" id="teacherCount">0</div></div>
+    </div>
+    <div class="card">
+     <h3>➕ Yeni hesap oluştur</h3>
+     <form id="accountForm">
+      <label>Hesap türü</label><select class="field" id="newRole"><option value="student">Öğrenci</option><option value="teacher">Öğretmen</option></select>
+      <label>Numara (benzersiz)</label><input class="field" id="newNumber" inputmode="numeric" required>
+      <label>Ad</label><input class="field" id="newFirst" required>
+      <label>Soyad</label><input class="field" id="newLast" required>
+      <label>Sınıf / Branş</label><input class="field" id="newClass" placeholder="Örn. 7/A veya Matematik" required>
+      <label>Giriş kodu</label><input class="field" id="newCode" required minlength="4">
+      <button class="primary">Hesabı oluştur</button>
+     </form>
+     <p class="muted">Oluşturduğun numara ve giriş kodunu kullanıcıya güvenli şekilde ilet.</p>
+    </div>
+    <div class="card"><h3>🔎 Hesaplar</h3><input class="field" id="accountSearch" placeholder="Numara veya isimle ara"><div id="accountList"></div></div>
+   </section>
+
   </div>
-
-  <section class="tabpage active" id="page-home">
-   <div class="grid">
-    <div class="card"><p>📒 Kaydedilen notlar</p><div class="stat" id="statNotes">0</div></div>
-    <div class="card"><p>🗂️ Tekrar kartları</p><div class="stat" id="statCards">0</div></div>
-    <div class="card"><p>🎯 Tamamlanan görev</p><div class="stat" id="statTasks">0/0</div></div>
-    <div class="card"><p>🔥 Çalışma serisi</p><div class="stat" id="statStreak">0 gün</div><button class="btn primary" onclick="markStudy()">Bugün çalıştım!</button></div>
-   </div>
-   <div class="card"><h3>💡 Günün çalışma önerisi</h3><p id="tip">Küçük hedefler belirle ve düzenli tekrar yap.</p><button class="btn" onclick="newTip()">Başka öneri</button></div>
-  </section>
-
-  <section class="tabpage" id="page-study">
-   <div class="card"><h3>🧠 Ders Merkezi</h3>
-    <label>Sınıf</label><select id="studyGrade"><option>5. sınıf</option><option>6. sınıf</option><option selected>7. sınıf</option><option>8. sınıf</option></select>
-    <label>Ders</label><select id="studySubject"><option>Türkçe</option><option>Matematik</option><option>Fen Bilimleri</option><option>Sosyal Bilgiler</option><option>İngilizce</option><option>Din Kültürü</option><option>İnkılap Tarihi</option><option>Bilişim Teknolojileri</option></select>
-    <label>Konu</label><input id="studyTopic" placeholder="Örn. hücre, oran-orantı, fiiller">
-    <div class="row"><button class="btn primary" onclick="studyAsk('explain')">📚 Anlat</button><button class="btn" onclick="studyAsk('examples')">💡 Örnek çöz</button><button class="btn" onclick="studyAsk('summary')">📌 Özetle</button><button class="btn" onclick="studyAsk('plan')">🗓️ Plan hazırla</button></div>
-   </div>
-  </section>
-
-  <section class="tabpage" id="page-quiz">
-   <div class="card"><h3>📝 Mini Test Hazırla</h3>
-    <label>Ders</label><select id="quizSubject"><option>Matematik</option><option>Türkçe</option><option>Fen Bilimleri</option><option>Sosyal Bilgiler</option><option>İngilizce</option><option>Din Kültürü</option></select>
-    <label>Konu</label><input id="quizTopic" placeholder="Test konusu">
-    <label>Soru sayısı</label><select id="quizCount"><option>5</option><option selected>10</option><option>15</option><option>20</option></select>
-    <button class="btn primary" onclick="makeQuiz()">Testi hazırla</button>
-   </div>
-  </section>
-
-  <section class="tabpage" id="page-cards">
-   <div class="card"><h3>🗂️ Tekrar Kartları</h3><label>Soru / Kavram</label><input id="cardQuestion" placeholder="Kartın sorusu"><label>Cevap</label><textarea id="cardAnswer" placeholder="Kartın cevabı"></textarea><button class="btn primary" onclick="addCard()">Kart ekle</button></div>
-   <div id="reviewCard"></div><div id="cardList"></div>
-  </section>
-
-  <section class="tabpage" id="page-tasks">
-   <div class="card"><h3>🎯 Görev Listem</h3><div class="row"><input id="taskText" placeholder="Örn. 20 soru çöz"><button class="btn primary" onclick="addTask()">Ekle</button></div><div id="taskList"></div></div>
-  </section>
-
-  <section class="tabpage" id="page-notes">
-   <div class="card"><h3>📒 Kişisel Not Defteri</h3><label>Başlık</label><input id="noteTitle" placeholder="Not başlığı"><label>İçerik</label><textarea id="noteBody" placeholder="Ders notunu yaz..."></textarea><button class="btn primary" onclick="addNote()">Notu kaydet</button><div id="noteList"></div></div>
-  </section>
-
-  <section class="tabpage" id="page-focus">
-   <div class="card" style="text-align:center"><h3>⏱️ Odaklanma Sayacı</h3><div class="stat" id="timer">25:00</div><div class="row"><button class="btn" onclick="setTimer(15)">15 dk</button><button class="btn primary" onclick="setTimer(25)">25 dk</button><button class="btn" onclick="setTimer(45)">45 dk</button></div><div class="row" style="margin-top:10px"><button class="btn primary" onclick="startTimer()">Başlat</button><button class="btn" onclick="pauseTimer()">Duraklat</button><button class="btn" onclick="resetTimer()">Sıfırla</button></div><p id="timerMessage"></p></div>
-  </section>
-
-  <section class="tabpage" id="page-tools">
-   <div class="grid">
-    <div class="card"><h3>📤 Sohbeti indir</h3><button class="btn primary" onclick="exportChat()">Metin olarak indir</button></div>
-    <div class="card"><h3>🌗 Tema</h3><button class="btn" onclick="toggleTheme()">Açık / Koyu tema</button></div>
-    <div class="card"><h3>🧹 Sohbet</h3><button class="btn danger" onclick="clearChat()">Sohbeti temizle</button></div>
-    <div class="card"><h3>📊 Not araçları</h3><button class="btn primary" onclick="closeModal('toolsModal');openGrades()">Hesaplayıcıları aç</button></div>
-   </div>
-  </section>
-  <p class="muted">Kişisel notlar ve görevler bu tarayıcıda saklanır; başka cihazlara otomatik aktarılmaz.</p>
- </div>
-</div>
-
-<div class="modal" id="gradesModal">
- <div class="panel"><button class="btn close" onclick="closeModal('gradesModal')">Kapat ✕</button><h2>📊 Sınav ve Not Araçları</h2>
-  <div class="tabs"><button class="btn primary" onclick="gradeTab('turkish')">Türkçe ortalama</button><button class="btn" onclick="gradeTab('average')">Ders ortalaması</button><button class="btn" onclick="gradeTab('lgs')">LGS neti</button></div>
-  <section id="grade-turkish">
-   <div class="card"><h3>Türkçe sınav ortalaması</h3><label>Yazılı (%50)</label><input type="number" min="0" max="100" id="trWritten"><label>Dinleme (%25)</label><input type="number" min="0" max="100" id="trListen"><label>Konuşma (%25)</label><input type="number" min="0" max="100" id="trSpeak"><button class="btn primary" onclick="calcTurkish()">Hesapla</button><p id="trResult"></p></div>
-  </section>
-  <section id="grade-average" style="display:none">
-   <div class="card"><h3>Not ortalaması</h3><p>Notlarını virgülle ayırarak yaz.</p><input id="averageInput" placeholder="80, 90, 75"><button class="btn primary" onclick="calcAverage()">Ortalama hesapla</button><p id="averageResult"></p></div>
-  </section>
-  <section id="grade-lgs" style="display:none">
-   <div class="card"><h3>LGS net hesabı</h3><p>Net = Doğru − Yanlış / 3</p><div class="grid"><div><label>Türkçe doğru / yanlış</label><input id="ltr" placeholder="Doğru, yanlış"></div><div><label>Matematik doğru / yanlış</label><input id="lmat" placeholder="Doğru, yanlış"></div><div><label>Fen doğru / yanlış</label><input id="lfen" placeholder="Doğru, yanlış"></div><div><label>İnkılap doğru / yanlış</label><input id="link" placeholder="Doğru, yanlış"></div><div><label>Din doğru / yanlış</label><input id="ldin" placeholder="Doğru, yanlış"></div><div><label>İngilizce doğru / yanlış</label><input id="ling" placeholder="Doğru, yanlış"></div></div><button class="btn primary" onclick="calcLGS()">Netleri hesapla</button><p id="lgsResult"></p><p class="muted">Bu araç net hesabı yapar; resmî LGS puanını hesaplamaz.</p></div>
-  </section>
- </div>
-</div>
-
-<div class="modal" id="profileModal">
- <div class="panel" style="max-width:440px"><button class="btn close" onclick="closeModal('profileModal')">Kapat ✕</button><h2>⚙️ Profil</h2><label>Ad Soyad</label><input id="profileName"><label>Sınıf</label><input id="profileClass"><button class="btn primary" onclick="saveProfile()">Kaydet</button></div>
-</div>
-
-<div class="modal" id="adminModal">
- <div class="panel" style="max-width:600px"><button class="btn close" onclick="closeModal('adminModal')">Kapat ✕</button><h2>👑 Yönetim Araçları</h2><div class="card"><h3>📢 Duyuru yayınla</h3><label>Başlık</label><input id="annTitle"><label>Duyuru</label><textarea id="annBody"></textarea><button class="btn primary" onclick="postAnnouncement()">Yayınla</button></div><div id="adminAnnList"></div><p class="muted">Bu demo sürümündeki duyurular yalnızca aynı tarayıcıda görünür. Gerçek okul çapında yayın için sunucu gerekir.</p></div>
+ </main>
 </div>
 
 <div id="toast" role="status"></div>
@@ -241,260 +263,278 @@ Sol menüden Ders Merkezi, Mini Test, Not Defteri ve diğer araçları açabilir
 <script>
 'use strict';
 
+/*
+ DEMO SÜRÜMÜ:
+ Bu örnek hesapları tarayıcıdaki localStorage içinde saklar.
+ Gerçek okul kullanımı için sunucu, veritabanı ve güvenli kimlik doğrulama gerekir.
+*/
 const $=id=>document.getElementById(id);
-const store={
- get(k,d){try{const v=localStorage.getItem('mgp_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
- set(k,v){try{localStorage.setItem('mgp_'+k,JSON.stringify(v))}catch(e){toast('Tarayıcı depolaması dolu olabilir.')}}
+const DB={
+ get(k,fallback){try{const x=localStorage.getItem('mgp_v2_'+k);return x===null?fallback:JSON.parse(x)}catch(e){return fallback}},
+ set(k,v){localStorage.setItem('mgp_v2_'+k,JSON.stringify(v))}
 };
-let users=store.get('users',{});
-let active=localStorage.getItem('mgp_active')||'';
-let history=[];
-let busy=false;
-let notes=store.get('notes',[]);
-let cards=store.get('cards',[]);
-let tasks=store.get('tasks',[]);
-let streak=store.get('streak',{day:'',count:0});
-let announcements=store.get('announcements',[]);
-let cardIndex=0;
-let seconds=25*60,timerId=null;
-let recognition=null;
 
-function toast(text){
- const el=$('toast');el.textContent=text;el.style.display='block';
- clearTimeout(toast.timeout);toast.timeout=setTimeout(()=>el.style.display='none',2600);
-}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function closeModal(id){$(id).style.display='none'}
-function openModal(id){$(id).style.display='flex'}
-document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m&&m.id!=='auth')m.style.display='none'}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal').forEach(m=>{if(m.id!=='auth')m.style.display='none'})});
+let accounts=DB.get('accounts',[]);
+let announcements=DB.get('announcements',[]);
+let homework=DB.get('homework',[]);
+let notes=DB.get('notes',[]);
+let tasks=DB.get('tasks',[]);
+let streaks=DB.get('streaks',{});
+let current=null;
+let timerSeconds=25*60,timerId=null;
+let chatHistory=[];
 
-function showLogin(){$('loginForm').style.display='block';$('registerForm').style.display='none';$('authTitle').textContent='MGP İHO AI'}
-function showRegister(){$('loginForm').style.display='none';$('registerForm').style.display='block';$('authTitle').textContent='Yeni Öğrenci Kaydı'}
-function register(){
- const name=$('regName').value.trim(),cls=$('regClass').value.trim()||'7/A',u=$('regUser').value.trim(),p=$('regPass').value;
- if(!name||!u||p.length<4){toast('Ad, kullanıcı adı ve en az 4 karakterli şifre gerekli.');return}
- if(u.toLowerCase()==='admin'||users[u]){toast('Bu kullanıcı adı kullanılıyor.');return}
- users[u]={name,cls,password:p};store.set('users',users);toast('Kayıt tamamlandı. Giriş yapabilirsin.');showLogin()
+function toast(message){
+ const el=$('toast');el.textContent=message;el.style.display='block';
+ clearTimeout(toast.handle);toast.handle=setTimeout(()=>el.style.display='none',3000);
 }
-function login(){
- const u=$('loginUser').value.trim(),p=$('loginPass').value;
- if(u==='admin'&&p==='mgp-demo-admin'){
-  active='admin';localStorage.setItem('mgp_active',active);enterApp();openAdmin();return
+function safe(value){
+ return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function today(){
+ const d=new Date();
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function persistAccounts(){DB.set('accounts',accounts)}
+function isAdmin(){return current&&current.role==='admin'}
+function isTeacher(){return current&&(current.role==='teacher'||current.role==='admin')}
+
+function login(number,code){
+ if(number==='111'&&code==='admin'){
+  current={number:'111',first:'Okul',last:'Yöneticisi',className:'Yönetim',role:'admin'};
+  enterApp();return;
  }
- if(!users[u]||users[u].password!==p){toast('Kullanıcı adı veya şifre yanlış.');return}
- active=u;localStorage.setItem('mgp_active',active);enterApp()
+ const account=accounts.find(a=>a.number===number&&a.code===code);
+ if(!account){toast('Numara veya giriş kodu yanlış.');return}
+ current={...account};
+ enterApp();
 }
+$('loginForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ login($('loginNumber').value.trim(),$('loginCode').value);
+});
+
 function enterApp(){
- $('auth').style.display='none';
- const user=active==='admin'?{name:'Okul Yöneticisi',cls:'Yönetici'}:users[active];
- $('userName').textContent=user?.name||'Öğrenci';
- $('userClass').textContent=user?.cls||'MGP İHO';
- $('adminMenu').style.display=active==='admin'?'block':'none';
- resetHistory();renderAnnouncement()
+ $('loginModal').classList.remove('open');
+ $('app').style.display='flex';
+ $('sideName').textContent=current.first+' '+current.last;
+ $('sideDetails').textContent=current.number+' · '+current.className;
+ $('roleBadge').textContent=current.role==='admin'?'YÖNETİCİ':current.role==='teacher'?'ÖĞRETMEN':'ÖĞRENCİ';
+ $('adminNav').style.display=isAdmin()?'block':'none';
+ $('teacherNav').style.display=isTeacher()?'block':'none';
+ $('welcomeText').textContent='Hoş geldin, '+current.first+'! Bugün neler öğrenmek istersin?';
+ if(!isTeacher())$('page-teacher').classList.remove('active');
+ if(!isAdmin())$('page-admin').classList.remove('active');
+ renderAll();
+ showPage('home');
 }
-function logout(){active='';localStorage.removeItem('mgp_active');location.reload()}
-function openProfile(){
- const user=users[active]||{name:'Okul Yöneticisi',cls:'Yönetici'};
- $('profileName').value=user.name;$('profileClass').value=user.cls;openModal('profileModal')
+function logout(){
+ pauseTimer();current=null;$('app').style.display='none';$('loginModal').classList.add('open');
+ $('loginNumber').value='';$('loginCode').value='';
 }
-function saveProfile(){
- if(active==='admin'){toast('Yönetici profili demo sürümünde değiştirilemiyor.');return}
- users[active].name=$('profileName').value.trim()||users[active].name;
- users[active].cls=$('profileClass').value.trim()||users[active].cls;
- store.set('users',users);enterApp();closeModal('profileModal');toast('Profil güncellendi.')
+
+function showPage(page){
+ if(page==='admin'&&!isAdmin()){toast('Bu alan yalnızca yöneticiye açıktır.');return}
+ if(page==='teacher'&&!isTeacher()){toast('Bu alan öğretmenlere açıktır.');return}
+ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
+ const names={home:'Ana Sayfa',ai:'Yapay Zekâ Asistanı',study:'Ders Merkezi',tasks:'Görevlerim',notes:'Not Defterim',focus:'Odaklanma Sayacı',school:'Okul Duyuruları',teacher:'Öğretmen Paneli',admin:'Yönetim Paneli'};
+ $('headerTitle').textContent='MGP İHO AI · '+(names[page]||page);
+ if(page==='admin')renderAccounts();
+ if(page==='school')renderSchool();
 }
-function resetHistory(){
- const u=users[active]||{name:'Öğrenci',cls:'7/A'};
- history=[{role:'system',content:`Sen MGP İHO öğrencilerine yardımcı olan eğitim asistanısın. Öğrencinin adı ${u.name}, sınıfı ${u.cls}. Türkçe konuş, yaşına uygun anlat, doğru ve adım adım açıklamalar yap. Bilmediğin bilgileri uydurma.`}]
+function renderAll(){renderStats();renderTasks();renderNotes();renderSchool();renderAccounts()}
+
+/* HESAP YÖNETİMİ */
+$('accountForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ if(!isAdmin()){toast('Yönetici yetkisi gerekli.');return}
+ const number=$('newNumber').value.trim();
+ const first=$('newFirst').value.trim();
+ const last=$('newLast').value.trim();
+ const className=$('newClass').value.trim();
+ const code=$('newCode').value;
+ const role=$('newRole').value;
+ if(number==='111'){toast('111 numarası yöneticiye ayrılmıştır.');return}
+ if(accounts.some(a=>a.number===number)){toast('Bu numara zaten kayıtlı.');return}
+ if(!/^[0-9]+$/.test(number)){toast('Numara yalnızca rakamlardan oluşmalı.');return}
+ if(code.length<4){toast('Giriş kodu en az 4 karakter olmalı.');return}
+ accounts.push({number,first,last,className,code,role,created:today()});
+ persistAccounts();e.target.reset();renderAccounts();renderStats();
+ toast('Hesap oluşturuldu: '+first+' '+last);
+});
+function renderAccounts(){
+ if(!isAdmin())return;
+ const query=($('accountSearch').value||'').toLocaleLowerCase('tr-TR');
+ const filtered=accounts.filter(a=>(a.number+' '+a.first+' '+a.last+' '+a.className).toLocaleLowerCase('tr-TR').includes(query));
+ $('accountCount').textContent=accounts.length;
+ $('studentCount').textContent=accounts.filter(a=>a.role==='student').length;
+ $('teacherCount').textContent=accounts.filter(a=>a.role==='teacher').length;
+ $('accountList').innerHTML=filtered.length?filtered.map(a=>`
+ <div class="item">
+  <div class="row" style="justify-content:space-between">
+   <div><b>${safe(a.first)} ${safe(a.last)}</b><div class="muted">No: ${safe(a.number)} · ${safe(a.className)}</div>
+   <span class="badge">${a.role==='teacher'?'Öğretmen':'Öğrenci'}</span></div>
+   <button class="danger" data-delete-account="${safe(a.number)}">Hesabı sil</button>
+  </div>
+ </div>`).join(''):'<p class="muted">Aramana uygun hesap bulunamadı.</p>';
+ $('accountList').querySelectorAll('[data-delete-account]').forEach(button=>{
+  button.onclick=()=>{
+   const n=button.dataset.deleteAccount;
+   const a=accounts.find(x=>x.number===n);
+   if(!a||!confirm(a.first+' '+a.last+' hesabı silinsin mi?'))return;
+   accounts=accounts.filter(x=>x.number!==n);persistAccounts();renderAccounts();renderStats();toast('Hesap silindi.')
+  }
+ });
 }
-function addMessage(text,who){
- const row=document.createElement('div');row.className='msg '+(who==='user'?'user':'bot');
- if(who!=='user'){const icon=document.createElement('div');icon.className='msg-icon';icon.textContent='🏫';row.appendChild(icon)}
- const bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=text;row.appendChild(bubble);
- $('chat').appendChild(row);$('chat').scrollTop=$('chat').scrollHeight;return bubble
+$('accountSearch').addEventListener('input',renderAccounts);
+
+/* GÖREVLER */
+$('taskForm').addEventListener('submit',e=>{
+ e.preventDefault();if(!current)return;
+ const text=$('taskInput').value.trim();if(!text)return;
+ tasks.unshift({id:Date.now(),owner:current.number,text,done:false,date:today()});
+ DB.set('tasks',tasks);$('taskInput').value='';renderTasks();renderStats();toast('Görev eklendi.')
+});
+function myTasks(){return tasks.filter(t=>t.owner===current?.number)}
+function renderTasks(){
+ if(!current)return;
+ const list=myTasks();
+ $('taskList').innerHTML=list.length?list.map(t=>`
+ <div class="item">
+  <label><input type="checkbox" data-task-check="${t.id}" ${t.done?'checked':''}>
+  <span style="${t.done?'text-decoration:line-through;opacity:.7':''}">${safe(t.text)}</span></label>
+  <div class="muted">${safe(t.date)}</div>
+  <button class="danger" data-task-delete="${t.id}">Sil</button>
+ </div>`).join(''):'<p class="muted">Henüz görev eklemedin.</p>';
+ $('taskList').querySelectorAll('[data-task-check]').forEach(input=>input.onchange=()=>{
+  const t=tasks.find(t=>t.id===Number(input.dataset.taskCheck)&&t.owner===current.number);
+  if(t)t.done=input.checked;DB.set('tasks',tasks);renderTasks();renderStats();
+ });
+ $('taskList').querySelectorAll('[data-task-delete]').forEach(button=>button.onclick=()=>{
+  tasks=tasks.filter(t=>!(t.id===Number(button.dataset.taskDelete)&&t.owner===current.number));
+  DB.set('tasks',tasks);renderTasks();renderStats();
+ });
 }
-async function sendMessage(){
- if(busy)return;
- const input=$('message'),text=input.value.trim();if(!text)return;
- input.value='';addMessage(text,'user');history.push({role:'user',content:text});busy=true;
- const bubble=addMessage('Yanıt hazırlanıyor…','assistant');
- try{
-  const response=await fetch('https://text.pollinations.ai/',{
-   method:'POST',headers:{'Content-Type':'application/json'},
-   body:JSON.stringify({messages:history,model:'openai'})
-  });
-  if(!response.ok)throw new Error('HTTP '+response.status);
-  const reply=(await response.text()).trim();
-  if(!reply)throw new Error('Boş yanıt');
-  bubble.textContent=reply;history.push({role:'assistant',content:reply});
-  if('speechSynthesis'in window){/* Ses yalnızca kullanıcı isterse açılır. */}
- }catch(e){
-  bubble.textContent='Şu anda yapay zekâ bağlantısı kurulamadı. İnternet bağlantını kontrol edip tekrar dene.';
-  history.pop()
- }finally{busy=false;$('chat').scrollTop=$('chat').scrollHeight}
+
+/* NOT DEFTERİ */
+$('noteForm').addEventListener('submit',e=>{
+ e.preventDefault();if(!current)return;
+ notes.unshift({id:Date.now(),owner:current.number,title:$('noteTitle').value.trim(),body:$('noteBody').value.trim(),date:today()});
+ DB.set('notes',notes);e.target.reset();renderNotes();renderStats();toast('Not kaydedildi.')
+});
+function renderNotes(){
+ if(!current)return;
+ const mine=notes.filter(n=>n.owner===current.number);
+ $('noteList').innerHTML=mine.length?mine.map(n=>`
+ <div class="item"><b>${safe(n.title)}</b><div class="muted">${safe(n.date)}</div><p>${safe(n.body)}</p>
+ <button class="danger" data-note-delete="${n.id}">Sil</button></div>`).join(''):'<p class="muted">Henüz notun yok.</p>';
+ $('noteList').querySelectorAll('[data-note-delete]').forEach(b=>b.onclick=()=>{
+  notes=notes.filter(n=>!(n.id===Number(b.dataset.noteDelete)&&n.owner===current.number));
+  DB.set('notes',notes);renderNotes();renderStats();
+ });
 }
-$('message').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage()}});
-function quickPrompt(text){$('message').value=text;sendMessage()}
-function newChat(){
- $('chat').innerHTML='';resetHistory();
- addMessage('Yeni sohbet başladı! Hangi konuda yardım istersin?','assistant')
+
+/* İLERLEME */
+function renderStats(){
+ if(!current)return;
+ const myNotes=notes.filter(n=>n.owner===current.number);
+ const myTasksList=tasks.filter(t=>t.owner===current.number);
+ $('homeNotes').textContent=myNotes.length;
+ $('homeTasks').textContent=myTasksList.filter(t=>t.done).length+'/'+myTasksList.length;
+ const s=streaks[current.number]||{day:'',count:0};
+ $('homeStreak').textContent=s.count+' gün';
 }
-function openTool(tab){openModal('toolsModal');showToolTab(tab);renderAll()}
-function showToolTab(tab){
- document.querySelectorAll('#toolTabs [data-tab]').forEach(b=>b.classList.toggle('primary',b.dataset.tab===tab));
- document.querySelectorAll('#toolsModal .tabpage').forEach(p=>p.classList.toggle('active',p.id==='page-'+tab))
+function markStudy(){
+ if(!current)return;
+ const d=today(),s=streaks[current.number]||{day:'',count:0};
+ if(s.day!==d){
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const y=yesterday.getFullYear()+'-'+String(yesterday.getMonth()+1).padStart(2,'0')+'-'+String(yesterday.getDate()).padStart(2,'0');
+  s.count=s.day===y?s.count+1:1;s.day=d;streaks[current.number]=s;DB.set('streaks',streaks);
+ }
+ renderStats();toast('Bugünkü çalışma kaydedildi! 🎉')
 }
-$('toolTabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)showToolTab(b.dataset.tab)});
-function studyAsk(kind){
+function changeTip(){
+ const tips=['25 dakika çalışıp kısa mola ver.','Yanlışlarını tekrar çöz.','Konuyu kendi cümlelerinle anlat.','Her gün önceki konuyu hatırla.','Küçük bir hedefle başla.','Telefon bildirimlerini çalışma sırasında kapat.'];
+ $('dailyTip').textContent=tips[Math.floor(Math.random()*tips.length)]
+}
+
+/* DUYURU VE ÖDEVLER */
+$('announcementForm').addEventListener('submit',e=>{
+ e.preventDefault();if(!isTeacher())return;
+ announcements.unshift({id:Date.now(),title:$('announcementTitle').value.trim(),body:$('announcementBody').value.trim(),by:current.first+' '+current.last,date:today()});
+ DB.set('announcements',announcements);e.target.reset();renderSchool();toast('Duyuru yayımlandı.')
+});
+$('homeworkForm').addEventListener('submit',e=>{
+ e.preventDefault();if(!isTeacher())return;
+ homework.unshift({id:Date.now(),subject:$('homeworkSubject').value.trim(),body:$('homeworkBody').value.trim(),date:$('homeworkDate').value,by:current.first+' '+current.last});
+ DB.set('homework',homework);e.target.reset();renderSchool();toast('Ödev yayımlandı.')
+});
+function renderSchool(){
+ $('announcementList').innerHTML=announcements.length?announcements.map(a=>`
+ <div class="item"><b>📢 ${safe(a.title)}</b><p>${safe(a.body)}</p><div class="muted">${safe(a.by||'Okul yönetimi')} · ${safe(a.date||'')}</div></div>`).join(''):'<p class="muted">Henüz duyuru yayımlanmadı.</p>';
+ $('homeworkList').innerHTML=homework.length?homework.map(h=>`
+ <div class="item"><b>📚 ${safe(h.subject)}</b><p>${safe(h.body)}</p><div class="muted">Öğretmen: ${safe(h.by)} · Son tarih: ${safe(h.date||'Belirtilmedi')}</div></div>`).join(''):'<p class="muted">Henüz ödev yayımlanmadı.</p>';
+}
+
+/* DERS MERKEZİ */
+function studyRequest(kind){
  const grade=$('studyGrade').value,subject=$('studySubject').value,topic=$('studyTopic').value.trim();
  if(!topic){toast('Önce bir konu yaz.');return}
- const prompts={
- explain:`${grade} düzeyinde ${subject} dersinde "${topic}" konusunu basitçe, adım adım örneklerle anlat. Sonunda 3 tekrar sorusu sor.`,
- examples:`${grade} düzeyinde ${subject} dersindeki "${topic}" konusunda kolaydan zora 5 çözümlü örnek göster.`,
- summary:`${grade} düzeyinde ${subject} dersindeki "${topic}" konusunu deftere yazılabilecek kısa ve düzenli notlarla özetle.`,
- plan:`${grade} öğrencisi için ${subject} "${topic}" konusunda 7 günlük, günlük 20-30 dakikalık tekrar ve soru çözme planı hazırla.`
+ const requests={
+  anlat:`${grade} ${subject} dersinde "${topic}" konusunu Türkçe ve basit örneklerle anlat.`,
+  örnek:`${grade} ${subject} dersinde "${topic}" konusu için kolaydan zora 5 çözümlü örnek ver.`,
+  özet:`${grade} ${subject} dersinde "${topic}" konusunu deftere yazılabilecek şekilde özetle.`,
+  plan:`${grade} öğrencisi için ${subject} "${topic}" konusuna 7 günlük çalışma planı hazırla.`,
+  test:`${grade} ${subject} "${topic}" konusu için 10 soruluk çoktan seçmeli test ve cevap anahtarı hazırla.`
  };
- closeModal('toolsModal');quickPrompt(prompts[kind])
+ showPage('ai');$('chatInput').value=requests[kind];$('chatInput').focus();
+ toast('İstek hazır. Yapay zekâya göndermek için Gönder tuşuna bas.')
 }
-function makeQuiz(){
- const subject=$('quizSubject').value,topic=$('quizTopic').value.trim(),count=$('quizCount').value;
- if(!topic){toast('Test konusunu yaz.');return}
- closeModal('toolsModal');
- quickPrompt(`${subject} dersinin "${topic}" konusu için ${count} soruluk çoktan seçmeli mini test hazırla. Sınıf düzeyine uygun sorular, seçenekler, cevap anahtarı ve kısa açıklamalar ekle.`)
-}
-function addCard(){
- const q=$('cardQuestion').value.trim(),a=$('cardAnswer').value.trim();
- if(!q||!a){toast('Soru ve cevap gerekli.');return}
- cards.unshift({id:Date.now(),q,a});store.set('cards',cards);
- $('cardQuestion').value='';$('cardAnswer').value='';renderCards();renderStats();toast('Kart kaydedildi.')
-}
-function renderCards(){
- const review=$('reviewCard'),list=$('cardList');
- if(!cards.length){review.innerHTML='<p>Henüz tekrar kartın yok.</p>';list.innerHTML='';return}
- cardIndex=(cardIndex+cards.length)%cards.length;const c=cards[cardIndex];
- review.innerHTML=`<div class="card"><p class="muted">Kart ${cardIndex+1}/${cards.length}</p><h3>${esc(c.q)}</h3><p id="cardShown" style="display:none;white-space:pre-wrap">${esc(c.a)}</p><div class="row"><button class="btn primary" id="showCardAnswer">Cevabı göster</button><button class="btn" id="prevCard">←</button><button class="btn" id="nextCard">→</button></div></div>`;
- $('showCardAnswer').onclick=()=>{const a=$('cardShown');a.style.display=a.style.display==='none'?'block':'none';$('showCardAnswer').textContent=a.style.display==='none'?'Cevabı göster':'Cevabı gizle'};
- $('prevCard').onclick=()=>{cardIndex--;renderCards()};$('nextCard').onclick=()=>{cardIndex++;renderCards()};
- list.innerHTML='<h3>Kartların</h3>'+cards.map(c=>`<div class="item"><b>${esc(c.q)}</b><p>${esc(c.a.slice(0,100))}</p><button class="btn danger" data-card-del="${c.id}">Sil</button></div>`).join('');
- list.querySelectorAll('[data-card-del]').forEach(b=>b.onclick=()=>{cards=cards.filter(c=>c.id!==Number(b.dataset.cardDel));store.set('cards',cards);renderCards();renderStats()})
-}
-function addTask(){
- const text=$('taskText').value.trim();if(!text)return;
- tasks.unshift({id:Date.now(),text,done:false,day:today()});store.set('tasks',tasks);$('taskText').value='';renderTasks();renderStats()
-}
-function renderTasks(){
- $('taskList').innerHTML=tasks.length?tasks.map(t=>`<div class="item"><label><input type="checkbox" data-task-check="${t.id}" ${t.done?'checked':''}> <span style="${t.done?'text-decoration:line-through':''}">${esc(t.text)}</span></label><div class="muted">${esc(t.day)}</div><button class="btn danger" data-task-del="${t.id}">Sil</button></div>`).join(''):'<p>Henüz görev eklemedin.</p>';
- $('taskList').querySelectorAll('[data-task-check]').forEach(b=>b.onchange=()=>{const t=tasks.find(t=>t.id===Number(b.dataset.taskCheck));if(t)t.done=b.checked;store.set('tasks',tasks);renderTasks();renderStats()});
- $('taskList').querySelectorAll('[data-task-del]').forEach(b=>b.onclick=()=>{tasks=tasks.filter(t=>t.id!==Number(b.dataset.taskDel));store.set('tasks',tasks);renderTasks();renderStats()})
-}
-function addNote(){
- const title=$('noteTitle').value.trim(),body=$('noteBody').value.trim();if(!title||!body){toast('Başlık ve not içeriği gerekli.');return}
- notes.unshift({id:Date.now(),title,body,date:new Date().toLocaleDateString('tr-TR')});store.set('notes',notes);
- $('noteTitle').value='';$('noteBody').value='';renderNotes();renderStats();toast('Not kaydedildi.')
-}
-function renderNotes(){
- $('noteList').innerHTML=notes.length?'<h3>Kaydedilen notlar</h3>'+notes.map(n=>`<div class="item"><b>${esc(n.title)}</b><div class="muted">${esc(n.date)}</div><p style="white-space:pre-wrap">${esc(n.body)}</p><button class="btn danger" data-note-del="${n.id}">Sil</button></div>`).join(''):'<p>Henüz not yok.</p>';
- $('noteList').querySelectorAll('[data-note-del]').forEach(b=>b.onclick=()=>{notes=notes.filter(n=>n.id!==Number(b.dataset.noteDel));store.set('notes',notes);renderNotes();renderStats()})
-}
-function renderStats(){
- $('statNotes').textContent=notes.length;$('statCards').textContent=cards.length;
- $('statTasks').textContent=tasks.filter(t=>t.done).length+'/'+tasks.length;
- $('statStreak').textContent=streak.count+' gün'
-}
-function renderAll(){renderStats();renderCards();renderTasks();renderNotes();updateTimer()}
-function markStudy(){
- const d=today();if(streak.day!==d){
-  const yDate=new Date();yDate.setDate(yDate.getDate()-1);
-  const y=yDate.getFullYear()+'-'+String(yDate.getMonth()+1).padStart(2,'0')+'-'+String(yDate.getDate()).padStart(2,'0');
-  streak.count=streak.day===y?streak.count+1:1;streak.day=d;store.set('streak',streak)
+
+/* YAPAY ZEKÂ BAĞLANTISI
+   Gerçek API anahtarını HTML içine koyma.
+   Aşağıdaki örnek, bir aracı sunucu uç noktası varsa çalışacak şekilde bırakılmıştır.
+*/
+const AI_ENDPOINT='';
+$('chatForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const text=$('chatInput').value.trim();if(!text)return;
+ $('chatInput').value='';
+ const user=document.createElement('div');user.className='message me';user.textContent=text;$('messages').appendChild(user);
+ const answer=document.createElement('div');answer.className='message ai';answer.textContent='Yanıt hazırlanıyor…';$('messages').appendChild(answer);
+ chatHistory.push({role:'user',content:text});
+ if(!AI_ENDPOINT){
+  answer.textContent='Yapay zekâ bağlantısı henüz yapılandırılmadı. Sohbeti gerçekten çalıştırmak için güvenli bir sunucu/API bağlantısı eklenmesi gerekiyor. Diğer okul araçlarını deneyebilirsin.';
+  return;
  }
- renderStats();toast('Bugünkü çalışman kaydedildi! 🎉')
-}
-function newTip(){
- const tips=['25 dakika çalış, ardından kısa mola ver.','Yanlış sorularını tekrar çöz.','Konuyu kendi cümlelerinle anlat.','Her gün önceki konudan kısa tekrar yap.','Çalışma hedefini küçük parçalara ayır.'];
- $('tip').textContent=tips[Math.floor(Math.random()*tips.length)]
-}
-function setTimer(min){pauseTimer();seconds=min*60;updateTimer();$('timerMessage').textContent='Yeni süre hazır.'}
-function updateTimer(){$('timer').textContent=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0')}
+ try{
+  const res=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})});
+  if(!res.ok)throw new Error('Bağlantı başarısız');
+  const data=await res.json();
+  const reply=data.reply||data.message||'Yanıt alınamadı.';
+  answer.textContent=reply;chatHistory.push({role:'assistant',content:reply});
+ }catch(err){answer.textContent='Yapay zekâ servisine bağlanılamadı. Sunucu adresini ve internet bağlantısını kontrol et.'}
+});
+
+/* ODAKLANMA SAYACI */
+function updateTimer(){$('timer').textContent=String(Math.floor(timerSeconds/60)).padStart(2,'0')+':'+String(timerSeconds%60).padStart(2,'0')}
+function setTimer(min){pauseTimer();timerSeconds=min*60;updateTimer();$('timerMessage').textContent='Süre ayarlandı.'}
 function startTimer(){
  if(timerId)return;
  $('timerMessage').textContent='Odaklanma başladı. Başarılar!';
  timerId=setInterval(()=>{
-  if(seconds>0){seconds--;updateTimer()}
-  if(seconds<=0){pauseTimer();$('timerMessage').textContent='Süre tamamlandı! Mola verebilirsin.';toast('Odaklanma süren bitti!')}
+  timerSeconds--;updateTimer();
+  if(timerSeconds<=0){pauseTimer();$('timerMessage').textContent='Süre tamamlandı! Kısa bir mola ver.';toast('Odaklanma tamamlandı!')}
  },1000)
 }
 function pauseTimer(){clearInterval(timerId);timerId=null}
-function resetTimer(){pauseTimer();seconds=25*60;updateTimer();$('timerMessage').textContent='Sayaç sıfırlandı.'}
-function exportChat(){
- const text=Array.from($('chat').querySelectorAll('.msg')).map(m=>(m.classList.contains('user')?'SEN: ':'MGP İHO AI: ')+(m.querySelector('.bubble')?.innerText||'')).join('\n\n');
- const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));
- const a=document.createElement('a');a.href=url;a.download='MGP-IHO-sohbet.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
-}
-function toggleTheme(){document.body.classList.toggle('light');localStorage.setItem('mgp_theme',document.body.classList.contains('light')?'light':'dark')}
-function openGrades(){openModal('gradesModal')}
-function gradeTab(tab){
- ['turkish','average','lgs'].forEach(t=>{$('grade-'+t).style.display=t===tab?'block':'none'});
- document.querySelectorAll('#gradesModal .tabs .btn').forEach((b,i)=>b.classList.toggle('primary',['turkish','average','lgs'][i]===tab))
-}
-function numberValue(id){const n=Number($(id).value);return Number.isFinite(n)?n:0}
-function calcTurkish(){
- const ids=['trWritten','trListen','trSpeak'];
- if(ids.some(id=>$(id).value.trim()==='')){toast('Üç notu da gir.');return}
- const vals=ids.map(numberValue);
- if(vals.some(n=>n<0||n>100)){toast('Notlar 0 ile 100 arasında olmalı.');return}
- $('trResult').textContent='Ağırlıklı ortalama: '+(vals[0]*.5+vals[1]*.25+vals[2]*.25).toFixed(2)
-}
-function calcAverage(){
- const raw=$('averageInput').value.trim();
- const values=raw.split(/[;,]+/).map(s=>Number(s.trim()));
- if(!raw||values.some(n=>!Number.isFinite(n)||n<0||n>100)){toast('0-100 arası notları virgülle ayırarak gir.');return}
- $('averageResult').textContent='Ortalama: '+(values.reduce((a,b)=>a+b,0)/values.length).toFixed(2)
-}
-function calcLGS(){
- const ids=['ltr','lmat','lfen','link','ldin','ling'];let total=0,details=[];
- for(const id of ids){
-  const raw=$(id).value.trim();if(!raw)continue;
-  const parts=raw.split(/[;,/ ]+/).filter(Boolean).map(Number);
-  if(parts.length!==2||parts.some(n=>!Number.isFinite(n)||n<0)){toast('Her alanı doğru, yanlış şeklinde gir.');return}
-  const net=parts[0]-parts[1]/3;total+=net;details.push(id.toUpperCase()+': '+net.toFixed(2))
- }
- $('lgsResult').textContent=details.join(' | ')+' | Toplam net: '+total.toFixed(2)
-}
-function openAdmin(){if(active!=='admin'){toast('Bu alan yalnızca yönetici içindir.');return}renderAdmin();openModal('adminModal')}
-function postAnnouncement(){
- if(active!=='admin'){toast('Yönetici yetkisi gerekli.');return}
- const title=$('annTitle').value.trim(),body=$('annBody').value.trim();if(!title||!body){toast('Duyuru başlığı ve içeriği gerekli.');return}
- announcements.unshift({id:Date.now(),title,body});store.set('announcements',announcements);$('annTitle').value='';$('annBody').value='';renderAdmin();renderAnnouncement();toast('Duyuru kaydedildi.')
-}
-function renderAdmin(){
- $('adminAnnList').innerHTML=announcements.map(a=>`<div class="item"><b>${esc(a.title)}</b><p>${esc(a.body)}</p><button class="btn danger" data-ann-del="${a.id}">Sil</button></div>`).join('')||'<p>Duyuru yok.</p>';
- $('adminAnnList').querySelectorAll('[data-ann-del]').forEach(b=>b.onclick=()=>{announcements=announcements.filter(a=>a.id!==Number(b.dataset.annDel));store.set('announcements',announcements);renderAdmin();renderAnnouncement()})
-}
-function renderAnnouncement(){
- const a=announcements[0],el=$('announcement');
- if(a){el.style.display='block';el.innerHTML='<b>📢 '+esc(a.title)+':</b> '+esc(a.body)+' <button class="btn" onclick="showAnnouncements()">Tüm duyurular</button>'}
- else el.style.display='none'
-}
-function showAnnouncements(){
- const text=announcements.length?announcements.map(a=>a.title+'\n'+a.body).join('\n\n──────────\n\n'):'Henüz okul duyurusu bulunmuyor.';
- addMessage('📢 DUYURULAR\n\n'+text,'assistant')
-}
-function toggleVoice(){
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){toast('Tarayıcın sesle yazmayı desteklemiyor.');return}
- if(recognition){recognition.stop();recognition=null;return}
- recognition=new SR();recognition.lang='tr-TR';recognition.onresult=e=>{$('message').value=e.results[0][0].transcript;$('message').focus()};
- recognition.onerror=()=>toast('Ses tanıma tamamlanamadı.');
- recognition.onend=()=>{recognition=null};recognition.start()
-}
-function clearChat(){if(confirm('Sohbet ekranı temizlensin mi?'))newChat()}
+function resetTimer(){pauseTimer();timerSeconds=25*60;updateTimer();$('timerMessage').textContent='Sayaç sıfırlandı.'}
+function toggleTheme(){document.body.classList.toggle('light');localStorage.setItem('mgp_v2_theme',document.body.classList.contains('light')?'light':'dark')}
 
-if(localStorage.getItem('mgp_theme')==='light')document.body.classList.add('light');
-if(active&&(active==='admin'||users[active]))enterApp();else openModal('auth');
-renderAll();
+/* BAŞLANGIÇ */
+if(localStorage.getItem('mgp_v2_theme')==='light')document.body.classList.add('light');
+updateTimer();
 </script>
 </body>
 </html>
